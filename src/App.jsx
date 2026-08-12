@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Mesa from "./pages/Mesa";
+import PedidoEnviado from "./pages/PedidoEnviado";
+
 
 function Inicio() {
 
@@ -15,7 +17,9 @@ function Inicio() {
 
         </div>
     );
+
 }
+
 
 function App() {
 
@@ -35,11 +39,18 @@ function App() {
                     element={<Mesa />}
                 />
 
+                <Route
+                    path="/pedido-enviado/:codigo"
+                    element={<PedidoEnviado />}
+                />
+
             </Routes>
 
         </BrowserRouter>
 
     );
+
 }
+
 
 export default App;

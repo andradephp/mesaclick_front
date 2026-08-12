@@ -2100,3 +2100,331 @@ button {
 
     white-space: nowrap;
 }
+
+/* =================================
+   PEDIDO ENVIADO
+================================= */
+
+.pedido-enviado {
+    min-height: 100vh;
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 24px 16px 32px;
+
+    display: flex;
+    justify-content: center;
+
+    background: #f7f7f7;
+}
+
+
+/* =================================
+   TARJETA PRINCIPAL
+================================= */
+
+.pedido-enviado-card {
+    width: 100%;
+    max-width: 430px;
+
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 24px 0 20px;
+}
+
+
+/* =================================
+   ICONO
+================================= */
+
+.pedido-enviado-icon {
+    width: 64px;
+    height: 64px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 16px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 107, 53, 0.12);
+
+    color: var(--primary);
+
+    font-size: 30px;
+    font-weight: 900;
+}
+
+
+/* =================================
+   TITULO
+================================= */
+
+.pedido-enviado-card h1 {
+    margin: 0;
+
+    color: #202020;
+
+    text-align: center;
+
+    font-size: 25px;
+    line-height: 1.2;
+
+    font-weight: 900;
+}
+
+
+/* =================================
+   DESCRIPCION
+================================= */
+
+.pedido-enviado-card > p {
+    max-width: 330px;
+
+    margin: 10px 0 0;
+
+    color: #777;
+
+    text-align: center;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+}
+
+
+/* =================================
+   HISTORIAL
+================================= */
+
+.historial-pedidos {
+    width: 100%;
+
+    margin-top: 26px;
+
+    padding: 18px;
+
+    box-sizing: border-box;
+
+    background: white;
+
+    border: 1px solid #e8e8e8;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.05);
+}
+
+
+/* =================================
+   CABECERA HISTORIAL
+================================= */
+
+.historial-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 14px;
+}
+
+.historial-header h2 {
+    margin: 0;
+
+    color: #222;
+
+    font-size: 16px;
+
+    font-weight: 900;
+}
+
+.historial-header span {
+    padding: 5px 9px;
+
+    border-radius: 8px;
+
+    background: #f3f3f3;
+
+    color: #777;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+/* =================================
+   LISTA
+================================= */
+
+.historial-lista {
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+
+    max-height: 300px;
+
+    overflow-y: auto;
+}
+
+
+/* =================================
+   PEDIDO INDIVIDUAL
+================================= */
+
+.historial-pedido {
+    width: 100%;
+
+    min-height: 68px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 12px 13px;
+
+    background: #fafafa;
+
+    border: 1px solid #eeeeee;
+
+    border-radius: 14px;
+}
+
+
+/* =================================
+   INFORMACION
+================================= */
+
+.historial-pedido-info {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.historial-pedido-titulo {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+.historial-pedido-titulo strong {
+    color: #222;
+
+    font-size: 14px;
+
+    font-weight: 850;
+}
+
+
+/* =================================
+   ESTADO
+================================= */
+
+.estado-pedido {
+    padding: 4px 7px;
+
+    border-radius: 7px;
+
+    background: rgba(255, 107, 53, 0.10);
+
+    color: var(--primary);
+
+    font-size: 9px;
+
+    font-weight: 900;
+
+    text-transform: uppercase;
+}
+
+
+/* =================================
+   FECHA
+================================= */
+
+.fecha-pedido {
+    color: #999;
+
+    font-size: 11px;
+}
+
+
+/* =================================
+   TOTAL
+================================= */
+
+.historial-pedido-total {
+    flex-shrink: 0;
+
+    color: #222;
+
+    font-size: 15px;
+
+    font-weight: 900;
+}
+
+
+/* =================================
+   BOTON NUEVO PEDIDO
+================================= */
+
+.pedido-enviado-card > button {
+    width: 100%;
+
+    min-height: 52px;
+
+    margin-top: 18px;
+
+    padding: 0 18px;
+
+    border: none;
+
+    border-radius: 15px;
+
+    background: var(--primary);
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: 850;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 18px rgba(255, 107, 53, 0.20);
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.pedido-enviado-card > button:active {
+    transform: scale(0.97);
+
+    box-shadow:
+        0 3px 10px rgba(255, 107, 53, 0.15);
+}

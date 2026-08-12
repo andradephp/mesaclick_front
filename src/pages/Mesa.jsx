@@ -2,8 +2,13 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { obtenerProductos } from "../services/productoService";
 import { obtenerCategorias } from "../services/categoriaService";
+import { useNavigate } from "react-router-dom";
 
 function Mesa() {
+
+    const [historialPedidos, setHistorialPedidos] = useState([]);
+
+    const navigate = useNavigate();
 
     const { codigo } = useParams();
 
@@ -53,6 +58,40 @@ function Mesa() {
     const personaActual = personas.find(
     (persona) => persona.id === personaSeleccionada
 );
+
+
+async function obtenerHistorialPedidos() {
+
+    try {
+
+        const respuesta = await fetch(
+            `http://localhost:8080/api/pedidos/mesa/${mesa.id_mesa}`
+        );
+
+        if (!respuesta.ok) {
+            throw new Error("No se pudo obtener el historial");
+        }
+
+        const pedidos = await respuesta.json();
+
+        setHistorialPedidos(pedidos);
+
+        console.log("=================================");
+        console.log("HISTORIAL DE PEDIDOS");
+        console.log(pedidos);
+        console.log("=================================");
+
+    } catch (error) {
+
+        console.error(
+            "Error obteniendo historial:",
+            error
+        );
+
+    }
+
+}
+
 
 function confirmarEliminacionPersona() {
 
@@ -261,6 +300,112 @@ function solicitarEliminarPersona() {
     setPersonaAEliminar(personaActual);
 }
 
+
+async function enviarPedido() {
+
+    try {
+
+        const pedidoRequest = {
+
+            idMesa: mesa.id_mesa,
+
+            personas: personas
+                .filter(
+                    (persona) => persona.productos.length > 0
+                )
+                .map((persona) => ({
+
+                    nombre: persona.nombre,
+
+                    productos: persona.productos.map((producto) => ({
+
+                        idProducto: producto.idProducto,
+
+                        cantidad: producto.cantidad
+
+                    }))
+
+                }))
+
+        };
+
+
+        console.log("=================================");
+        console.log("ENVIANDO PEDIDO");
+        console.log(pedidoRequest);
+        console.log("=================================");
+
+
+        const respuesta = await fetch(
+            "http://localhost:8080/api/pedidos",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(pedidoRequest)
+            }
+        );
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                "No se pudo guardar el pedido"
+            );
+
+        }
+
+
+        // ==========================================
+        // RECIBIR RESPUESTA DE SPRING BOOT
+        // ==========================================
+
+        const pedidoGuardado = await respuesta.json();
+
+
+        console.log("=================================");
+        console.log("PEDIDO GUARDADO CORRECTAMENTE");
+        console.log(pedidoGuardado);
+        console.log("ID PEDIDO:", pedidoGuardado.idPedido);
+        console.log("TOTAL:", pedidoGuardado.totalPedido);
+        console.log("ESTADO:", pedidoGuardado.estadoPedido);
+        console.log("=================================");
+
+
+        // ==========================================
+        // CERRAR CONFIRMACIÓN
+        // ==========================================
+
+        setConfirmacionAbierta(false);
+
+
+        // ==========================================
+        // IR A PÁGINA PEDIDO ENVIADO
+        // ==========================================
+
+        navigate(`/pedido-enviado/${codigo}`, {
+    state: {
+        idPedido: pedidoGuardado.idPedido,
+        total: pedidoGuardado.totalPedido,
+        estado: pedidoGuardado.estadoPedido
+    }
+});
+
+
+    } catch (error) {
+
+        console.error(
+            "ERROR AL ENVIAR EL PEDIDO:",
+            error
+        );
+
+    }
+
+}
+
     useEffect(() => {
 
         fetch(`http://localhost:8080/api/mesas/codigo/${codigo}`)
@@ -288,6 +433,16 @@ function solicitarEliminarPersona() {
             });
 
     }, [codigo]);
+
+    useEffect(() => {
+
+    if (!mesa) {
+        return;
+    }
+
+    obtenerHistorialPedidos();
+
+}, [mesa]);
 
     useEffect(() => {
 
@@ -962,16 +1117,11 @@ function solicitarEliminarPersona() {
 
 
                 <button
-                    className="confirm-final"
-                    onClick={() =>
-                        console.log(
-                            "Pedido confirmado",
-                            personas
-                        )
-                    }
-                >
-                    Confirmar pedido ✓
-                </button>
+    className="confirm-final"
+    onClick={enviarPedido}
+>
+    Confirmar pedido ✓
+</button>
 
             </div>
 
