@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { obtenerProductos } from "../services/productoService";
 import { obtenerCategorias } from "../services/categoriaService";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; 
 
 function Mesa() {
 
@@ -478,42 +478,85 @@ async function enviarPedido() {
     }
 
 
-    if (error || !mesa) {
-        return (
-            <div className="error-screen">
-                <div className="error-icon">!</div>
-
-                <h2>Mesa no encontrada</h2>
-
-                <p>
-                    El código de esta mesa no es válido.
-                </p>
-            </div>
-        );
-    }
-
+        if (error || !mesa) {
     return (
-        <main className="cliente">
+        <main className="error-page">
+
+            <div className="error-container">
+
+                <div className="error-logo">
+                    Mesa<span>Click</span>
+                </div>
+
+                <div className="error-card">
+
+                    <div className="error-icon">
+                        !
+                    </div>
+
+                    <span className="error-number">
+                        404
+                    </span>
+
+                    <h1>
+                        Mesa no encontrada
+                    </h1>
+
+                    <p>
+                        Lo sentimos, no pudimos encontrar
+                        la mesa que estás buscando.
+                    </p>
+
+                    <button
+                        className="error-button"
+                        onClick={() => navigate("/")}
+                    >
+                        Volver al inicio
+                    </button>
+
+                </div>
+
+            </div>
+
+        </main>
+    );
+}
+
+        console.log("CÓDIGO DE LA MESA:", mesa?.codigoQrMesa);
+
+        return (
+            <main className="cliente">
 
             {/* ENCABEZADO */}
 
-            <header className="cliente-header">
+<header className="cliente-header">
 
-                <div>
-                    <span className="logo">
-                        Mesa<span>Click</span>
-                    </span>
+    <div>
+        <span className="logo">
+            Mesa<span>Click</span>
+        </span>
 
-                    <p className="restaurant-text">
-                        Tu experiencia, más fácil.
-                    </p>
-                </div>
+        <p className="restaurant-text">
+            Tu experiencia, más fácil.
+        </p>
+    </div>
 
-                <div className="mesa-badge">
-                    Mesa {mesa.numero_mesa}
-                </div>
+    <div className="header-actions">
 
-            </header>
+        <div className="mesa-badge">
+            Mesa {mesa.numero_mesa}
+        </div>
+
+        <button
+    className="boton-iniciar-sesion"
+    onClick={() => navigate(`/iniciar-sesion?codigo=${mesa.codigoQrMesa}`)}
+>
+    Iniciar sesión
+</button>
+
+    </div>
+
+</header>
 
 
             {/* BIENVENIDA */}

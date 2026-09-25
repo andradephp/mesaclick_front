@@ -2428,3 +2428,979 @@ button {
     box-shadow:
         0 3px 10px rgba(255, 107, 53, 0.15);
 }
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.boton-iniciar-sesion {
+    border: 2px solid #f18a04;
+    border-radius: 10px;
+    padding: 10px 10px;
+    background: #f18a04;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.boton-iniciar-sesion:hover {
+    background: #ffffff;
+    color: #f18a04;
+    border-color: #f18a04;
+}
+
+
+/* ==========================================
+   LOGIN MESACLICK
+========================================== */
+
+.login-page {
+    min-height: 100vh;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 30px 20px;
+
+    box-sizing: border-box;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(241, 138, 4, 0.12),
+            transparent 35%
+        ),
+        #ffffff;
+}
+
+
+/* ==========================================
+   CONTENEDOR
+========================================== */
+
+.login-container {
+    width: 100%;
+    max-width: 430px;
+
+    text-align: center;
+}
+
+
+/* ==========================================
+   LOGO
+========================================== */
+
+.login-logo {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+
+    color: #222222;
+
+    margin-bottom: 4px;
+}
+
+.login-logo span {
+    color: #f18a04;
+}
+
+.login-subtitle {
+    margin: 0 0 25px;
+
+    color: #777777;
+
+    font-size: 14px;
+}
+
+
+/* ==========================================
+   TARJETA
+========================================== */
+
+.login-card {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 1px solid #eeeeee;
+
+    border-radius: 20px;
+
+    padding: 32px;
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.08);
+
+    text-align: left;
+
+    position: relative;
+}
+
+
+/* Pequeña línea naranja superior */
+
+.login-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 65px;
+    height: 4px;
+
+    background: #f18a04;
+
+    border-radius: 0 0 8px 8px;
+}
+
+
+/* ==========================================
+   TÍTULO
+========================================== */
+
+.login-card h1 {
+    margin: 4px 0 8px;
+
+    text-align: center;
+
+    color: #222222;
+
+    font-size: 27px;
+    font-weight: 750;
+}
+
+.login-description {
+    margin: 0 auto 28px;
+
+    max-width: 330px;
+
+    text-align: center;
+
+    color: #777777;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================
+   CAMPOS
+========================================== */
+
+.login-form-group {
+    margin-bottom: 19px;
+}
+
+.login-form-group label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #333333;
+
+    font-size: 14px;
+
+    font-weight: 650;
+}
+
+.login-form-group input {
+    width: 100%;
+
+    height: 48px;
+
+    box-sizing: border-box;
+
+    padding: 0 14px;
+
+    border: 1px solid #dddddd;
+
+    border-radius: 11px;
+
+    background: #fafafa;
+
+    color: #222222;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.login-form-group input:hover {
+    border-color: #cccccc;
+
+    background: #ffffff;
+}
+
+.login-form-group input:focus {
+    border-color: #f18a04;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 0 0 3px rgba(241, 138, 4, 0.13);
+}
+
+.login-form-group input::placeholder {
+    color: #aaaaaa;
+}
+
+
+/* ==========================================
+   BOTÓN INICIAR SESIÓN
+========================================== */
+
+.login-button {
+    width: 100%;
+
+    height: 48px;
+
+    margin-top: 5px;
+
+    border: 2px solid #f18a04;
+
+    border-radius: 11px;
+
+    background: #f18a04;
+
+    color: #ffffff;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.15s ease,
+        box-shadow 0.2s ease;
+}
+
+.login-button:hover {
+    background: #ffffff;
+
+    color: #f18a04;
+
+    box-shadow:
+        0 5px 15px rgba(241, 138, 4, 0.18);
+}
+
+.login-button:active {
+    transform: scale(0.98);
+}
+
+
+/* ==========================================
+   REGISTRO
+========================================== */
+
+.login-register {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    margin-top: 25px;
+
+    padding-top: 21px;
+
+    border-top: 1px solid #eeeeee;
+
+    font-size: 14px;
+
+    color: #777777;
+}
+
+.login-register button {
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    color: #f18a04;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.login-register button:hover {
+    text-decoration: underline;
+}
+
+
+/* ==========================================
+   VOLVER
+========================================== */
+
+.login-back {
+    display: block;
+
+    margin: 21px auto 0;
+
+    padding: 5px 10px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #888888;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.login-back:hover {
+    color: #f18a04;
+
+    transform: translateX(-2px);
+}
+
+
+/* ==========================================
+   CELULAR
+========================================== */
+
+@media (max-width: 480px) {
+
+    .login-page {
+        min-height: 100vh;
+
+        align-items: flex-start;
+
+        padding:
+            45px 15px 25px;
+    }
+
+    .login-logo {
+        font-size: 36px;
+    }
+
+    .login-subtitle {
+        margin-bottom: 22px;
+    }
+
+    .login-card {
+        padding: 30px 22px;
+
+        border-radius: 17px;
+    }
+
+    .login-card h1 {
+        font-size: 24px;
+    }
+
+    .login-description {
+        font-size: 13px;
+    }
+
+}
+
+
+/* ==========================================
+   REGISTRO MESACLICK
+========================================== */
+
+.registro-page {
+    min-height: 100vh;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 30px 20px;
+
+    box-sizing: border-box;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(241, 138, 4, 0.12),
+            transparent 35%
+        ),
+        #ffffff;
+}
+
+
+/* ==========================================
+   CONTENEDOR
+========================================== */
+
+.registro-container {
+    width: 100%;
+    max-width: 430px;
+
+    text-align: center;
+}
+
+
+/* ==========================================
+   LOGO
+========================================== */
+
+.registro-logo {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+
+    color: #222222;
+
+    margin-bottom: 4px;
+}
+
+.registro-logo span {
+    color: #f18a04;
+}
+
+.registro-subtitle {
+    margin: 0 0 25px;
+
+    color: #777777;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================
+   TARJETA
+========================================== */
+
+.registro-card {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 1px solid #eeeeee;
+
+    border-radius: 20px;
+
+    padding: 32px;
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.08);
+
+    text-align: left;
+
+    position: relative;
+}
+
+
+/* Línea naranja superior */
+
+.registro-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 65px;
+    height: 4px;
+
+    background: #f18a04;
+
+    border-radius: 0 0 8px 8px;
+}
+
+
+/* ==========================================
+   TÍTULO
+========================================== */
+
+.registro-card h1 {
+    margin: 4px 0 8px;
+
+    text-align: center;
+
+    color: #222222;
+
+    font-size: 27px;
+    font-weight: 750;
+}
+
+.registro-description {
+    margin: 0 auto 28px;
+
+    max-width: 340px;
+
+    text-align: center;
+
+    color: #777777;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================
+   CAMPOS
+========================================== */
+
+.registro-form-group {
+    margin-bottom: 17px;
+}
+
+.registro-form-group label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #333333;
+
+    font-size: 14px;
+
+    font-weight: 650;
+}
+
+.registro-form-group input {
+    width: 100%;
+
+    height: 46px;
+
+    box-sizing: border-box;
+
+    padding: 0 14px;
+
+    border: 1px solid #dddddd;
+
+    border-radius: 11px;
+
+    background: #fafafa;
+
+    color: #222222;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.registro-form-group input:hover {
+    border-color: #cccccc;
+
+    background: #ffffff;
+}
+
+.registro-form-group input:focus {
+    border-color: #f18a04;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 0 0 3px rgba(241, 138, 4, 0.13);
+}
+
+.registro-form-group input::placeholder {
+    color: #aaaaaa;
+}
+
+
+/* ==========================================
+   BOTÓN CREAR CUENTA
+========================================== */
+
+.registro-button {
+    width: 100%;
+
+    height: 48px;
+
+    margin-top: 5px;
+
+    border: 2px solid #f18a04;
+
+    border-radius: 11px;
+
+    background: #f18a04;
+
+    color: #ffffff;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.15s ease,
+        box-shadow 0.2s ease;
+}
+
+.registro-button:hover {
+    background: #ffffff;
+
+    color: #f18a04;
+
+    box-shadow:
+        0 5px 15px rgba(241, 138, 4, 0.18);
+}
+
+.registro-button:active {
+    transform: scale(0.98);
+}
+
+
+/* ==========================================
+   LOGIN
+========================================== */
+
+.registro-login {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    margin-top: 25px;
+
+    padding-top: 21px;
+
+    border-top: 1px solid #eeeeee;
+
+    font-size: 14px;
+
+    color: #777777;
+}
+
+.registro-login button {
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    color: #f18a04;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.registro-login button:hover {
+    text-decoration: underline;
+}
+
+
+/* ==========================================
+   VOLVER
+========================================== */
+
+.registro-back {
+    display: block;
+
+    margin: 21px auto 0;
+
+    padding: 5px 10px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #888888;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.registro-back:hover {
+    color: #f18a04;
+
+    transform: translateX(-2px);
+}
+
+
+/* ==========================================
+   CELULAR
+========================================== */
+
+@media (max-width: 480px) {
+
+    .registro-page {
+        min-height: 100vh;
+
+        align-items: flex-start;
+
+        padding:
+            45px 15px 25px;
+    }
+
+    .registro-logo {
+        font-size: 36px;
+    }
+
+    .registro-subtitle {
+        margin-bottom: 22px;
+    }
+
+    .registro-card {
+        padding: 30px 22px;
+
+        border-radius: 17px;
+    }
+
+    .registro-card h1 {
+        font-size: 24px;
+    }
+
+    .registro-description {
+        font-size: 13px;
+    }
+
+}
+
+
+/* ==========================================
+   ERROR MESACLICK
+========================================== */
+
+.error-page {
+    min-height: 100vh;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 30px 20px;
+
+    box-sizing: border-box;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(241, 138, 4, 0.12),
+            transparent 35%
+        ),
+        #ffffff;
+}
+
+.error-container {
+    width: 100%;
+    max-width: 430px;
+
+    text-align: center;
+}
+
+.error-logo {
+    font-size: 42px;
+    font-weight: 800;
+
+    letter-spacing: -1.5px;
+
+    color: #222222;
+
+    margin-bottom: 25px;
+}
+
+.error-logo span {
+    color: #f18a04;
+}
+
+.error-card {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 38px 32px;
+
+    background: #ffffff;
+
+    border: 1px solid #eeeeee;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.08);
+
+    position: relative;
+}
+
+.error-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 65px;
+    height: 4px;
+
+    background: #f18a04;
+
+    border-radius: 0 0 8px 8px;
+}
+
+.error-icon {
+    width: 58px;
+    height: 58px;
+
+    margin: 5px auto 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(241, 138, 4, 0.12);
+
+    color: #f18a04;
+
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.error-number {
+    display: block;
+
+    color: #f18a04;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    margin-bottom: 5px;
+}
+
+.error-card h1 {
+    margin: 0 0 10px;
+
+    color: #222222;
+
+    font-size: 27px;
+    font-weight: 750;
+}
+
+.error-card p {
+    margin: 0 auto 28px;
+
+    max-width: 320px;
+
+    color: #777777;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+.error-button {
+    width: 100%;
+
+    height: 48px;
+
+    border: 2px solid #f18a04;
+
+    border-radius: 11px;
+
+    background: #f18a04;
+
+    color: #ffffff;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.15s ease,
+        box-shadow 0.2s ease;
+}
+
+.error-button:hover {
+    background: #ffffff;
+
+    color: #f18a04;
+
+    box-shadow:
+        0 5px 15px rgba(241, 138, 4, 0.18);
+}
+
+.error-button:active {
+    transform: scale(0.98);
+}
+
+@media (max-width: 480px) {
+
+    .error-page {
+        align-items: flex-start;
+
+        padding:
+            60px 15px 25px;
+    }
+
+    .error-logo {
+        font-size: 36px;
+
+        margin-bottom: 22px;
+    }
+
+    .error-card {
+        padding: 32px 22px;
+
+        border-radius: 17px;
+    }
+
+    .error-card h1 {
+        font-size: 24px;
+    }
+
+}
