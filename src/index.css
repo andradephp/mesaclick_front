@@ -3404,3 +3404,426 @@ button {
     }
 
 }
+
+/* =========================================
+   LOGIN PERSONAL MESACLICK
+   ========================================= */
+
+.personal-login {
+    min-height: 100vh;
+    width: 100%;
+
+    background: #f6f6f6;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 30px 20px;
+}
+
+
+/* TARJETA PRINCIPAL */
+
+.personal-login-card {
+    width: 100%;
+    max-width: 470px;
+
+    background: #ffffff;
+
+    border-radius: 20px;
+
+    padding: 42px 40px;
+
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.07);
+
+    text-align: center;
+}
+
+
+/* LOGO */
+
+.personal-logo {
+    font-size: 34px;
+    font-weight: 800;
+
+    color: #222222;
+
+    letter-spacing: -1px;
+}
+
+.personal-logo span {
+    color: #f18a04;
+}
+
+
+.personal-subtitle {
+    margin-top: 5px;
+    margin-bottom: 25px;
+
+    color: #858585;
+
+    font-size: 14px;
+}
+
+
+/* LINEA NARANJA */
+
+.personal-divider {
+    width: 52px;
+    height: 4px;
+
+    background: #f18a04;
+
+    border-radius: 10px;
+
+    margin: 0 auto 27px;
+}
+
+
+/* TITULO */
+
+.personal-login-card h1 {
+    margin: 0;
+
+    color: #222222;
+
+    font-size: 26px;
+    font-weight: 700;
+}
+
+
+.personal-description {
+    margin: 9px 0 28px;
+
+    color: #777777;
+
+    font-size: 14px;
+}
+
+
+/* CONTENEDOR ROLES */
+
+.roles-container {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 13px;
+}
+
+
+/* BOTON DE ROL */
+
+.role-button {
+    width: 100%;
+
+    min-height: 76px;
+
+    border: 1px solid #e7e7e7;
+
+    background: #ffffff;
+
+    border-radius: 14px;
+
+    padding: 12px 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.role-button:hover {
+    border-color: #f18a04;
+
+    box-shadow: 0 6px 18px rgba(241, 138, 4, 0.12);
+
+    transform: translateY(-2px);
+}
+
+
+.role-button:active {
+    transform: translateY(0);
+}
+
+
+/* ICONO */
+
+.role-icon {
+    width: 48px;
+    height: 48px;
+
+    flex-shrink: 0;
+
+    background: #fff3e1;
+
+    border-radius: 12px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-right: 14px;
+}
+
+
+/* INFORMACION */
+
+.role-info {
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+
+.role-info strong {
+    color: #222222;
+
+    font-size: 15px;
+
+    font-weight: 650;
+}
+
+
+.role-info span {
+    color: #888888;
+
+    font-size: 12px;
+}
+
+
+/* FLECHA */
+
+.role-arrow {
+    color: #f18a04;
+
+    font-size: 23px;
+
+    font-weight: 500;
+
+    padding-left: 10px;
+}
+
+
+/* =========================================
+   ICONO ADMINISTRADOR
+   ========================================= */
+
+.admin-icon {
+    width: 24px;
+    height: 27px;
+
+    position: relative;
+}
+
+
+.admin-head {
+    width: 9px;
+    height: 9px;
+
+    background: #f18a04;
+
+    border-radius: 50%;
+
+    position: absolute;
+
+    top: 1px;
+    left: 7px;
+}
+
+
+.admin-body {
+    width: 19px;
+    height: 10px;
+
+    background: #f18a04;
+
+    border-radius: 10px 10px 4px 4px;
+
+    position: absolute;
+
+    bottom: 1px;
+    left: 2px;
+}
+
+
+/* =========================================
+   ICONO COCINA
+   ========================================= */
+
+.kitchen-icon {
+    width: 25px;
+    height: 27px;
+
+    position: relative;
+}
+
+
+.knife {
+    width: 4px;
+    height: 24px;
+
+    background: #f18a04;
+
+    border-radius: 3px;
+
+    position: absolute;
+
+    left: 7px;
+    top: 1px;
+
+    transform: rotate(25deg);
+}
+
+
+.fork {
+    width: 4px;
+    height: 23px;
+
+    background: #f18a04;
+
+    border-radius: 3px;
+
+    position: absolute;
+
+    right: 6px;
+    top: 2px;
+
+    transform: rotate(-25deg);
+}
+
+
+.fork::before,
+.fork::after {
+    content: "";
+
+    position: absolute;
+
+    width: 3px;
+    height: 8px;
+
+    background: #f18a04;
+
+    border-radius: 3px;
+
+    top: -4px;
+}
+
+
+.fork::before {
+    left: -3px;
+}
+
+
+.fork::after {
+    right: -3px;
+}
+
+
+/* =========================================
+   ICONO MESERO
+   ========================================= */
+
+.waiter-icon {
+    width: 25px;
+    height: 27px;
+
+    position: relative;
+}
+
+
+.waiter-head {
+    width: 9px;
+    height: 9px;
+
+    background: #f18a04;
+
+    border-radius: 50%;
+
+    position: absolute;
+
+    top: 1px;
+    left: 8px;
+}
+
+
+.waiter-body {
+    width: 18px;
+    height: 11px;
+
+    background: #f18a04;
+
+    border-radius: 8px 8px 3px 3px;
+
+    position: absolute;
+
+    bottom: 1px;
+    left: 4px;
+}
+
+
+/* FOOTER */
+
+.personal-footer {
+    margin-top: 27px;
+    margin-bottom: 0;
+
+    color: #a0a0a0;
+
+    font-size: 11px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 500px) {
+
+    .personal-login {
+        padding: 20px 14px;
+    }
+
+
+    .personal-login-card {
+        padding: 32px 21px;
+
+        border-radius: 18px;
+    }
+    
+
+    .personal-logo {
+        font-size: 30px;
+    }
+
+
+    .personal-login-card h1 {
+        font-size: 23px;
+    }
+
+
+    .personal-description {
+        font-size: 13px;
+    }
+
+
+    .role-button {
+        min-height: 72px;
+    }
+
+}

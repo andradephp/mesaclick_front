@@ -5,6 +5,7 @@ import PedidoEnviado from "./pages/PedidoEnviado";
 import IniciarSesion from "./pages/IniciarSesion";
 import Registrarse from "./pages/Registrarse";
 import Error404 from "./pages/Error404";
+import LoginPersonal from "./pages/LoginPersonal";
 
 
 function Inicio() {
@@ -61,6 +62,8 @@ function App() {
     path="*"
     element={<Error404 />}
 />
+
+<Route path="/personal/login" element={<LoginPersonal />} />
 
             </Routes>
 
