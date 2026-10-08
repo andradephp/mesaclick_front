@@ -1,3 +1,4 @@
+
 function LoginPersonal() {
 
     return (
@@ -23,19 +24,19 @@ function LoginPersonal() {
 
                 <div className="roles-container">
 
-                    {/* ADMINISTRADOR */}
+                    {/* CAJERO */}
                     <button className="role-button">
 
                         <div className="role-icon">
-                            <div className="admin-icon">
-                                <div className="admin-head"></div>
-                                <div className="admin-body"></div>
+                            <div className="cashier-icon">
+                                <div className="cashier-head"></div>
+                                <div className="cashier-body"></div>
                             </div>
                         </div>
 
                         <div className="role-info">
-                            <strong>Administrador</strong>
-                            <span>Gestión del sistema</span>
+                            <strong>Cajero</strong>
+                            <span>Gestión de pagos</span>
                         </div>
 
                         <div className="role-arrow">
@@ -101,3 +102,4 @@ function LoginPersonal() {
 }
 
 export default LoginPersonal;
+

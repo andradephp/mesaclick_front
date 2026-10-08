@@ -6,6 +6,9 @@ import IniciarSesion from "./pages/IniciarSesion";
 import Registrarse from "./pages/Registrarse";
 import Error404 from "./pages/Error404";
 import LoginPersonal from "./pages/LoginPersonal";
+import LoginAdmin from "./pages/LoginAdmin";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminPersonal from "./pages/AdminPersonal";
 
 
 function Inicio() {
@@ -64,6 +67,18 @@ function App() {
 />
 
 <Route path="/personal/login" element={<LoginPersonal />} />
+
+<Route path="/admin/login" element={<LoginAdmin />} />
+
+<Route
+    path="/admin/dashboard"
+    element={<AdminDashboard />}
+/>
+
+<Route
+    path="/admin/personal"
+    element={<AdminPersonal />}
+/>
 
             </Routes>
 
