@@ -5933,3 +5933,1020 @@ button {
         width: 100%;
     }
 }
+
+
+.nuevo-pedido-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(20, 24, 31, 0.58);
+}
+
+.nuevo-pedido-modal {
+    width: 100%;
+    max-width: 680px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 28px;
+    border-radius: 18px;
+    background: #fff;
+    color: #242424;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
+}
+
+.nuevo-pedido-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.nuevo-pedido-etiqueta {
+    color: #c96b00;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.nuevo-pedido-header h2 {
+    margin: 8px 0;
+    font-size: 26px;
+}
+
+.nuevo-pedido-header p,
+.nuevo-pedido-menu-titulo p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.nuevo-pedido-cerrar {
+    width: 42px;
+    height: 42px;
+    border: 0;
+    border-radius: 10px;
+    background: #f3f4f6;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.nuevo-pedido-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.nuevo-pedido-select {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    background: white;
+    font-size: 16px;
+}
+
+.nuevo-pedido-menu-titulo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin: 26px 0 12px;
+}
+
+.nuevo-pedido-menu-titulo h3 {
+    margin: 0 0 5px;
+}
+
+.nuevo-pedido-menu-titulo > span {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.nuevo-pedido-productos {
+    display: grid;
+    gap: 10px;
+}
+
+.nuevo-pedido-producto {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+}
+
+.nuevo-pedido-producto-info {
+    display: grid;
+    gap: 6px;
+}
+
+.nuevo-pedido-producto-info strong {
+    font-size: 15px;
+}
+
+.nuevo-pedido-producto-info span {
+    color: #656565;
+    font-size: 14px;
+}
+
+.nuevo-pedido-cantidad {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nuevo-pedido-cantidad button {
+    width: 42px;
+    height: 42px;
+    border: 1px solid #e1e1e1;
+    border-radius: 10px;
+    background: #fff8ef;
+    color: #a95400;
+    font-size: 24px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.nuevo-pedido-cantidad button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.nuevo-pedido-cantidad strong {
+    min-width: 20px;
+    text-align: center;
+    font-size: 17px;
+}
+
+.nuevo-pedido-error {
+    margin-bottom: 16px;
+    padding: 12px;
+    border-radius: 10px;
+    background: #fff0f0;
+    color: #a51d1d;
+}
+
+.nuevo-pedido-footer {
+    position: sticky;
+    bottom: -28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 20px -28px -28px;
+    padding: 20px 28px 28px;
+    border-top: 1px solid #e5e7eb;
+    background: white;
+}
+
+.nuevo-pedido-total {
+    display: grid;
+    gap: 5px;
+}
+
+.nuevo-pedido-total span {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.nuevo-pedido-total strong {
+    font-size: 22px;
+}
+
+.nuevo-pedido-guardar {
+    min-height: 48px;
+    padding: 12px 20px;
+    border: 0;
+    border-radius: 10px;
+    background: #f18a04;
+    color: white;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.nuevo-pedido-guardar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 520px) {
+    .nuevo-pedido-overlay {
+        padding: 8px;
+    }
+
+    .nuevo-pedido-modal {
+        max-height: 95vh;
+        padding: 18px;
+    }
+
+    .nuevo-pedido-footer {
+        bottom: -18px;
+        flex-direction: column;
+        align-items: stretch;
+        margin: 20px -18px -18px;
+        padding: 16px 18px 18px;
+    }
+
+    .nuevo-pedido-guardar {
+        width: 100%;
+    }
+}
+
+
+
+/* ===== PANEL NUEVO DE MESERO ===== */
+
+.mesero-nuevo-dashboard {
+    min-height: 100vh;
+    padding: 0 34px 24px;
+    background: #f6f7f9;
+    color: #252525;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.mesero-nuevo-header {
+    min-height: 86px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.mesero-nuevo-logo {
+    font-size: 27px;
+    font-weight: 850;
+    letter-spacing: -1px;
+}
+
+.mesero-nuevo-logo > span {
+    color: #f18a04;
+}
+
+.mesero-nuevo-logo p {
+    margin: 4px 0 0;
+    color: #777;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0;
+}
+
+.mesero-nuevo-usuario {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mesero-nuevo-avatar {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #fff0dc;
+    color: #b96000;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.mesero-nuevo-datos-usuario {
+    display: grid;
+    gap: 4px;
+}
+
+.mesero-nuevo-datos-usuario strong {
+    font-size: 14px;
+}
+
+.mesero-nuevo-datos-usuario span {
+    color: #777;
+    font-size: 12px;
+}
+
+.mesero-nuevo-cerrar-sesion,
+.mesero-nuevo-actualizar {
+    min-height: 42px;
+    padding: 10px 15px;
+    border: 1px solid #dedfe3;
+    border-radius: 9px;
+    background: white;
+    color: #343434;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.mesero-nuevo-cerrar-sesion:hover,
+.mesero-nuevo-actualizar:hover {
+    background: #f2f2f2;
+}
+
+.mesero-nuevo-bienvenida {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 34px 0 26px;
+}
+
+.mesero-nuevo-etiqueta {
+    color: #b96808;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.mesero-nuevo-bienvenida h1 {
+    margin: 8px 0;
+    font-size: clamp(27px, 3vw, 35px);
+    letter-spacing: -1px;
+}
+
+.mesero-nuevo-bienvenida p {
+    margin: 0;
+    color: #70747d;
+    line-height: 1.6;
+}
+
+.mesero-nuevo-btn-principal {
+    min-height: 54px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 22px;
+    border: none;
+    border-radius: 11px;
+    background: #f18a04;
+    color: white;
+    font-size: 15px;
+    font-weight: 800;
+    white-space: nowrap;
+    box-shadow: 0 5px 12px rgba(241, 138, 4, 0.16);
+    cursor: pointer;
+}
+
+.mesero-nuevo-btn-principal:hover,
+.mesero-nuevo-btn-entregar:hover {
+    background: #d97600;
+}
+
+.mesero-nuevo-mas {
+    font-size: 25px;
+    line-height: 1;
+}
+
+.mesero-nuevo-resumen {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 26px;
+}
+
+.mesero-nuevo-resumen-card {
+    min-height: 112px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    border: 1px solid #e8e9ec;
+    border-radius: 14px;
+    background: #fff;
+}
+
+.mesero-nuevo-resumen-icono {
+    width: 43px;
+    height: 43px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: #fff2e1;
+    color: #b96808;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.resumen-listos .mesero-nuevo-resumen-icono {
+    background: #e5f7ec;
+    color: #247749;
+}
+
+.mesero-nuevo-resumen-card p {
+    margin: 0 0 8px;
+    color: #70747d;
+    font-size: 13px;
+}
+
+.mesero-nuevo-resumen-card strong {
+    font-size: 27px;
+}
+
+.mesero-nuevo-contenedor {
+    padding: 24px;
+    border: 1px solid #e8e9ec;
+    border-radius: 16px;
+    background: white;
+}
+
+.mesero-nuevo-barra {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.mesero-nuevo-barra h2 {
+    margin: 0 0 7px;
+    font-size: 22px;
+}
+
+.mesero-nuevo-barra p {
+    margin: 0;
+    color: #747780;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.mesero-nuevo-pestanas {
+    display: flex;
+    gap: 24px;
+    margin-top: 24px;
+    border-bottom: 1px solid #e9e9ec;
+}
+
+.mesero-nuevo-pestana {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 0 2px 14px;
+    border: 0;
+    border-bottom: 3px solid transparent;
+    background: transparent;
+    color: #777;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.mesero-nuevo-pestana span {
+    min-width: 23px;
+    padding: 3px 6px;
+    border-radius: 20px;
+    background: #f0f1f3;
+    color: #53565c;
+    font-size: 12px;
+    text-align: center;
+}
+
+.mesero-nuevo-pestana.seleccionada {
+    border-bottom-color: #f18a04;
+    color: #a95800;
+}
+
+.mesero-nuevo-pestana.seleccionada span {
+    background: #fff0dc;
+    color: #a95800;
+}
+
+.mesero-nuevo-lista {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    padding-top: 20px;
+}
+
+.mesero-nuevo-pedido {
+    min-width: 0;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+    border-radius: 13px;
+    background: #fff;
+}
+
+.mesero-nuevo-pedido-listo {
+    border: 1px solid #79c797;
+    background: #fbfffc;
+    box-shadow: 0 0 0 2px rgba(65, 163, 99, 0.07);
+}
+
+.mesero-nuevo-pedido-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding-bottom: 17px;
+    border-bottom: 1px solid #eceef0;
+}
+
+.mesero-nuevo-id {
+    color: #a85d08;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.mesero-nuevo-pedido-top h3 {
+    margin: 7px 0;
+    font-size: 23px;
+}
+
+.mesero-nuevo-fecha {
+    color: #777;
+    font-size: 12px;
+}
+
+.mesero-nuevo-estado {
+    max-width: 145px;
+    padding: 7px 10px;
+    border-radius: 8px;
+    background: #f0f1f3;
+    color: #555;
+    font-size: 11px;
+    font-weight: 800;
+    text-align: center;
+}
+
+.mesero-nuevo-estado.estado-listo {
+    background: #dff6e7;
+    color: #176d3c;
+}
+
+.mesero-nuevo-estado.estado-en_preparacion {
+    background: #e6efff;
+    color: #2859a6;
+}
+
+.mesero-nuevo-estado.estado-pendiente {
+    background: #fff0d9;
+    color: #965400;
+}
+
+.mesero-nuevo-estado.estado-entregado {
+    background: #e7f5ec;
+    color: #176d3c;
+}
+
+.mesero-nuevo-productos {
+    display: grid;
+    gap: 14px;
+    padding: 16px 0;
+}
+
+.mesero-nuevo-persona h4 {
+    margin: 0 0 8px;
+    font-size: 13px;
+}
+
+.mesero-nuevo-persona ul {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.mesero-nuevo-persona li {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.mesero-nuevo-cantidad {
+    flex-shrink: 0;
+    color: #a85d08;
+    font-weight: 900;
+}
+
+.mesero-nuevo-pie {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding-top: 15px;
+    border-top: 1px solid #eceef0;
+}
+
+.mesero-nuevo-pie > div {
+    display: grid;
+    gap: 5px;
+}
+
+.mesero-nuevo-pie > div > span {
+    color: #747780;
+    font-size: 12px;
+}
+
+.mesero-nuevo-pie > div > strong {
+    font-size: 20px;
+}
+
+.mesero-nuevo-btn-entregar {
+    min-height: 44px;
+    padding: 10px 13px;
+    border: 0;
+    border-radius: 9px;
+    background: #21834a;
+    color: white;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.mesero-nuevo-btn-entregar:hover {
+    background: #176d3c;
+}
+
+.mesero-nuevo-btn-entregar:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.mesero-nuevo-espera,
+.mesero-nuevo-entregado {
+    color: #6f737a;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: right;
+}
+
+.mesero-nuevo-entregado {
+    color: #21834a;
+}
+
+.mesero-nuevo-vacio {
+    padding: 55px 20px;
+    color: #6f737a;
+    text-align: center;
+}
+
+.mesero-nuevo-vacio-icono {
+    width: 52px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    background: #fff1df;
+    color: #b96808;
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.mesero-nuevo-vacio h3 {
+    margin: 0 0 8px;
+    color: #2c2c2c;
+}
+
+.mesero-nuevo-vacio p {
+    margin: 0 auto 18px;
+    max-width: 400px;
+    line-height: 1.6;
+}
+
+.mesero-nuevo-btn-secundario {
+    min-height: 44px;
+    padding: 10px 16px;
+    border: 1px solid #f18a04;
+    border-radius: 9px;
+    background: white;
+    color: #a95800;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.mesero-nuevo-error {
+    margin-top: 20px;
+    padding: 18px;
+    border-radius: 10px;
+    background: #fff0f0;
+    color: #a51d1d;
+}
+
+.mesero-nuevo-error button {
+    padding: 9px 12px;
+    border: 1px solid #e2b4b4;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+}
+
+.mesero-nuevo-nota {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 20px;
+    color: #777;
+    font-size: 12px;
+}
+
+.mesero-nuevo-punto-vivo {
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #299653;
+}
+
+.mesero-nuevo-footer {
+    padding: 24px 0 5px;
+    color: #888;
+    font-size: 12px;
+    text-align: center;
+}
+
+/* Adaptación para tabletas y celulares */
+@media (max-width: 1050px) {
+    .mesero-nuevo-resumen {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .mesero-nuevo-lista {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .mesero-nuevo-dashboard {
+        padding: 0 14px 20px;
+    }
+
+    .mesero-nuevo-header {
+        align-items: flex-start;
+        padding: 17px 0;
+    }
+
+    .mesero-nuevo-usuario {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    .mesero-nuevo-datos-usuario {
+        display: none;
+    }
+
+    .mesero-nuevo-cerrar-sesion {
+        min-height: 38px;
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .mesero-nuevo-bienvenida {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 26px 0 20px;
+    }
+
+    .mesero-nuevo-btn-principal {
+        width: 100%;
+    }
+
+    .mesero-nuevo-resumen {
+        gap: 9px;
+    }
+
+    .mesero-nuevo-resumen-card {
+        min-height: 88px;
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .mesero-nuevo-resumen-icono {
+        width: 34px;
+        height: 34px;
+    }
+
+    .mesero-nuevo-resumen-card p {
+        font-size: 11px;
+    }
+
+    .mesero-nuevo-resumen-card strong {
+        font-size: 23px;
+    }
+
+    .mesero-nuevo-contenedor {
+        padding: 15px;
+    }
+
+    .mesero-nuevo-barra {
+        align-items: flex-start;
+    }
+
+    .mesero-nuevo-barra h2 {
+        font-size: 19px;
+    }
+
+    .mesero-nuevo-pestanas {
+        gap: 15px;
+    }
+
+    .mesero-nuevo-pestana {
+        gap: 5px;
+        font-size: 12px;
+    }
+
+    .mesero-nuevo-pedido {
+        padding: 15px;
+    }
+
+    .mesero-nuevo-pedido-top {
+        flex-direction: column;
+    }
+
+    .mesero-nuevo-pie {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .mesero-nuevo-btn-entregar {
+        width: 100%;
+        min-height: 48px;
+        font-size: 14px;
+    }
+
+    .mesero-nuevo-espera,
+    .mesero-nuevo-entregado {
+        text-align: left;
+    }
+}
+
+
+/* ========================================
+   VENTANA DE CONFIRMACIÓN DE ENTREGA
+======================================== */
+
+.confirmacion-entrega-fondo {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(20, 24, 32, 0.6);
+    backdrop-filter: blur(4px);
+    animation: aparecerFondoEntrega 0.2s ease;
+}
+
+.confirmacion-entrega-modal {
+    width: 100%;
+    max-width: 440px;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    animation: aparecerModalEntrega 0.25s ease;
+}
+
+.confirmacion-entrega-icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 68px;
+    height: 68px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: #fff1dc;
+    color: #f18a04;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.confirmacion-entrega-titulo {
+    margin: 0 0 12px;
+    color: #222222;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.confirmacion-entrega-mensaje {
+    margin: 0 0 24px;
+    color: #666666;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.confirmacion-entrega-datos {
+    margin-bottom: 24px;
+    padding: 15px;
+    border: 1px solid #eeeeee;
+    border-radius: 12px;
+    background: #fafafa;
+    text-align: left;
+}
+
+.confirmacion-entrega-datos p {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 8px 0;
+    color: #666666;
+    font-size: 14px;
+}
+
+.confirmacion-entrega-datos strong {
+    color: #222222;
+    text-align: right;
+}
+
+.confirmacion-entrega-botones {
+    display: flex;
+    gap: 12px;
+}
+
+.confirmacion-entrega-boton {
+    flex: 1;
+    min-height: 46px;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.confirmacion-entrega-boton:active {
+    transform: scale(0.98);
+}
+
+.confirmacion-entrega-cancelar {
+    border: 1px solid #dddddd;
+    background: #ffffff;
+    color: #444444;
+}
+
+.confirmacion-entrega-cancelar:hover {
+    background: #f3f3f3;
+}
+
+.confirmacion-entrega-confirmar {
+    background: #f18a04;
+    color: #ffffff;
+}
+
+.confirmacion-entrega-confirmar:hover {
+    background: #d97600;
+}
+
+.confirmacion-entrega-boton:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+@keyframes aparecerFondoEntrega {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes aparecerModalEntrega {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Adaptación para celulares */
+@media (max-width: 480px) {
+    .confirmacion-entrega-modal {
+        padding: 24px 20px;
+        border-radius: 16px;
+    }
+
+    .confirmacion-entrega-titulo {
+        font-size: 21px;
+    }
+
+    .confirmacion-entrega-botones {
+        flex-direction: column-reverse;
+    }
+
+    .confirmacion-entrega-boton {
+        width: 100%;
+        min-height: 48px;
+    }
+}
