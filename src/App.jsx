@@ -13,6 +13,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminPersonal from "./pages/AdminPersonal";
 
 import MeseroDashboard from "./pages/MeseroDashboard";
+import PanelCocina from "./pages/PanelCocina";
 
 
 function Inicio() {
@@ -69,14 +70,6 @@ function PanelCajero() {
     );
 }
 
-function PanelCocina() {
-    return (
-        <main>
-            <h1>Panel de Cocina</h1>
-            <p>Bienvenido a tu área de trabajo en MesaClick.</p>
-        </main>
-    );
-}
 
 function App() {
     return (
@@ -116,13 +109,13 @@ function App() {
                 />
 
                 <Route
-                    path="/personal/cocina"
-                    element={
-                        <RutaPersonal rolPermitido="COCINA">
-                            <PanelCocina />
-                        </RutaPersonal>
-                    }
-                />
+    path="/personal/cocina"
+    element={
+        <RutaPersonal rolPermitido="COCINA">
+            <PanelCocina />
+        </RutaPersonal>
+    }
+/>
 
                 {/* Administrador */}
                 <Route path="/admin/login" element={<LoginAdmin />} />

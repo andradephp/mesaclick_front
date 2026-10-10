@@ -63,12 +63,17 @@ function LoginPersonal() {
 
             const rol = payload.rol;
 
-            if (!rutas[rol]) {
-                setError(
-                    "No tienes permisos para acceder al portal del personal."
-                );
-                return;
-            }
+if (!rutas[rol]) {
+    setError(
+        "No tienes permisos para acceder al portal del personal."
+    );
+    return;
+}
+
+if (rol !== "COCINA" && rol !== "MESERO" && rol !== "CAJERO") {
+    setError("No tienes permisos para acceder al portal del personal.");
+    return;
+}
 
             localStorage.setItem("token", datos.token);
             localStorage.setItem("rol", rol);
