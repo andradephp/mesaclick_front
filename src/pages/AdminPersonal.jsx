@@ -50,7 +50,7 @@ const cargarUsuarios = async () => {
         }
 
         const respuesta = await fetch(
-            "http://localhost:8080/api/admin/usuarios",
+            "/api/admin/usuarios",
             {
                 method: "GET",
                 headers: {
@@ -205,7 +205,7 @@ setUsuarios(datos);
             }
 
             const respuesta = await fetch(
-                "http://localhost:8080/api/admin/usuarios",
+                "/api/admin/usuarios",
                 {
                     method: "POST",
                     headers: {

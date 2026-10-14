@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 
-const API = "http://localhost:8080/api";
+const API = "/api";
 
 function NuevoPedidoModal({ onCerrar, onPedidoCreado }) {
     const [mesas, setMesas] = useState([]);

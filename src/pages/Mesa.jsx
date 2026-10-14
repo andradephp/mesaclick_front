@@ -65,7 +65,7 @@ async function obtenerHistorialPedidos() {
     try {
 
         const respuesta = await fetch(
-            `http://localhost:8080/api/pedidos/mesa/${mesa.id_mesa}`
+            `/api/pedidos/mesa/${mesa.id_mesa}`
         );
 
         if (!respuesta.ok) {
@@ -337,7 +337,7 @@ async function enviarPedido() {
 
 
         const respuesta = await fetch(
-            "http://localhost:8080/api/pedidos",
+            "/api/pedidos",
             {
                 method: "POST",
 
@@ -408,7 +408,7 @@ async function enviarPedido() {
 
     useEffect(() => {
 
-        fetch(`http://localhost:8080/api/mesas/codigo/${codigo}`)
+        fetch(`/api/mesas/codigo/${codigo}`)
             .then(response => {
 
                 if (!response.ok) {

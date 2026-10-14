@@ -13,7 +13,7 @@ function PanelCocina() {
             const token = localStorage.getItem("token");
 
             const respuesta = await fetch(
-                "http://localhost:8080/api/pedidos/mesero",
+                "/api/pedidos/mesero",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -57,7 +57,7 @@ function PanelCocina() {
             const token = localStorage.getItem("token");
 
             const respuesta = await fetch(
-                `http://localhost:8080/api/pedidos/${idPedido}/listo`,
+                `/api/pedidos/${idPedido}/listo`,
                 {
                     method: "PATCH",
                     headers: {

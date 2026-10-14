@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080/api/categorias";
+const API_URL = "/api/categorias";
 
 export async function obtenerCategorias() {
 

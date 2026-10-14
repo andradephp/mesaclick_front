@@ -15,7 +15,6 @@ import AdminPersonal from "./pages/AdminPersonal";
 import MeseroDashboard from "./pages/MeseroDashboard";
 import PanelCocina from "./pages/PanelCocina";
 
-
 function Inicio() {
     return (
         <div>
@@ -25,40 +24,39 @@ function Inicio() {
     );
 }
 
-/* Protege las páginas del personal */
-function RutaPersonal({ rolPermitido, children }) {
+/* Protege las rutas privadas del personal y administrador */
+function RutaProtegida({
+    rolPermitido,
+    loginPath,
+    children,
+}) {
     const token = localStorage.getItem("token");
     const rol = localStorage.getItem("rol");
 
+    // Si no hay sesión, enviar al login correspondiente.
     if (!token || !rol) {
-        return <Navigate to="/personal/login" replace />;
+        return <Navigate to={loginPath} replace />;
     }
 
+    // Si el usuario no tiene el rol requerido,
+    // enviarlo a su propia área.
     if (rol !== rolPermitido) {
-        const rutas = {
+        const rutasPorRol = {
+            ADMIN: "/admin/dashboard",
+            COCINA: "/personal/cocina",
             MESERO: "/personal/mesero",
             CAJERO: "/personal/cajero",
-            COCINA: "/personal/cocina",
         };
 
-        if (rutas[rol]) {
-            return <Navigate to={rutas[rol]} replace />;
-        }
-
-        return <Navigate to="/personal/login" replace />;
+        return (
+            <Navigate
+                to={rutasPorRol[rol] || "/"}
+                replace
+            />
+        );
     }
 
     return children;
-}
-
-/* Paneles provisionales: luego agregaremos sus funciones */
-function PanelMesero() {
-    return (
-        <main>
-            <h1>Panel del Mesero</h1>
-            <p>Bienvenido a tu área de trabajo en MesaClick.</p>
-        </main>
-    );
 }
 
 function PanelCajero() {
@@ -70,71 +68,118 @@ function PanelCajero() {
     );
 }
 
-
 function App() {
     return (
         <BrowserRouter>
             <Routes>
                 {/* Cliente */}
                 <Route path="/" element={<Inicio />} />
-                <Route path="/mesa/:codigo" element={<Mesa />} />
+
+                <Route
+                    path="/mesa/:codigo"
+                    element={<Mesa />}
+                />
+
                 <Route
                     path="/pedido-enviado/:codigo"
                     element={<PedidoEnviado />}
                 />
+
                 <Route
                     path="/iniciar-sesion"
                     element={<IniciarSesion />}
                 />
-                <Route path="/registrarse" element={<Registrarse />} />
 
-                {/* Personal */}
+                <Route
+                    path="/registrarse"
+                    element={<Registrarse />}
+                />
+
+                {/* Login del personal */}
                 <Route
                     path="/personal/login"
                     element={<LoginPersonal />}
                 />
 
+                {/* Panel de Cocina */}
                 <Route
-                    path="/personal/mesero"
-                    element={<MeseroDashboard />}
-                />
-
-                <Route
-                    path="/personal/cajero"
+                    path="/personal/cocina"
                     element={
-                        <RutaPersonal rolPermitido="CAJERO">
-                            <PanelCajero />
-                        </RutaPersonal>
+                        <RutaProtegida
+                            rolPermitido="COCINA"
+                            loginPath="/personal/login"
+                        >
+                            <PanelCocina />
+                        </RutaProtegida>
                     }
                 />
 
+                {/* Panel del Mesero */}
                 <Route
-    path="/personal/cocina"
-    element={
-        <RutaPersonal rolPermitido="COCINA">
-            <PanelCocina />
-        </RutaPersonal>
-    }
-/>
+                    path="/personal/mesero"
+                    element={
+                        <RutaProtegida
+                            rolPermitido="MESERO"
+                            loginPath="/personal/login"
+                        >
+                            <MeseroDashboard />
+                        </RutaProtegida>
+                    }
+                />
 
-                {/* Administrador */}
-                <Route path="/admin/login" element={<LoginAdmin />} />
+                {/* Panel del Cajero */}
+                <Route
+                    path="/personal/cajero"
+                    element={
+                        <RutaProtegida
+                            rolPermitido="CAJERO"
+                            loginPath="/personal/login"
+                        >
+                            <PanelCajero />
+                        </RutaProtegida>
+                    }
+                />
+
+                {/* Login del administrador */}
+                <Route
+                    path="/admin/login"
+                    element={<LoginAdmin />}
+                />
+
+                {/* Dashboard del administrador protegido */}
                 <Route
                     path="/admin/dashboard"
-                    element={<AdminDashboard />}
+                    element={
+                        <RutaProtegida
+                            rolPermitido="ADMIN"
+                            loginPath="/admin/login"
+                        >
+                            <AdminDashboard />
+                        </RutaProtegida>
+                    }
                 />
+
+                {/* Gestión de personal protegida */}
                 <Route
                     path="/admin/personal"
-                    element={<AdminPersonal />}
+                    element={
+                        <RutaProtegida
+                            rolPermitido="ADMIN"
+                            loginPath="/admin/login"
+                        >
+                            <AdminPersonal />
+                        </RutaProtegida>
+                    }
                 />
 
-
                 {/* Página no encontrada */}
-                <Route path="*" element={<Error404 />} />
+                <Route
+                    path="*"
+                    element={<Error404 />}
+                />
             </Routes>
         </BrowserRouter>
     );
 }
 
 export default App;
-

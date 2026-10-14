@@ -20,7 +20,7 @@ function PedidoEnviado() {
                 // ==========================================
 
                 const respuestaMesa = await fetch(
-                    `http://localhost:8080/api/mesas/codigo/${codigo}`
+                    `/api/mesas/codigo/${codigo}`
                 );
 
                 if (!respuestaMesa.ok) {
@@ -37,7 +37,7 @@ function PedidoEnviado() {
                 // ==========================================
 
                 const respuestaPedidos = await fetch(
-                    `http://localhost:8080/api/pedidos/mesa/${mesaData.id_mesa}`
+                    `/api/pedidos/mesa/${mesaData.id_mesa}`
                 );
 
                 if (!respuestaPedidos.ok) {

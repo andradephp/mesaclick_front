@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NuevoPedidoModal from "./NuevoPedidoModal";
 
-const API_URL = "http://localhost:8080/api/pedidos/mesero";
+const API_URL = "/api/pedidos/mesero";
 
 function MeseroDashboard() {
     const navigate = useNavigate();
@@ -78,7 +78,7 @@ function MeseroDashboard() {
             const token = localStorage.getItem("token");
 
             const respuesta = await fetch(
-                `http://localhost:8080/api/pedidos/${idPedido}/entregado`,
+                `/api/pedidos/${idPedido}/entregado`,
                 {
                     method: "PATCH",
                     headers: {
