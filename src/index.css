@@ -8764,3 +8764,371 @@ button {
 /* FOOTER */
 .mc-footer { background: var(--mc-dark); color: #ffffff; padding: 40px 24px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
 .mc-footer-content { display: flex; justify-content: space-between; align-items: center; }
+
+/* ===== MESACLICK: ADMIN PRODUCTOS (pegar al final de src/index.css) ===== */
+.mc-ap-page { --mc-ap-orange:#f18a04; --mc-ap-ink:#202531; --mc-ap-border:#e9eaf0; min-height:100vh; display:flex; background:#f6f7fb; color:var(--mc-ap-ink); font-family:inherit; }
+.mc-ap-page * { box-sizing:border-box; }
+.mc-ap-sidebar { width:245px; flex-shrink:0; background:#fff; border-right:1px solid var(--mc-ap-border); display:flex; flex-direction:column; min-height:100vh; padding:25px 16px; }
+.mc-ap-brand { display:flex; gap:12px; align-items:center; padding:4px 10px 32px; }
+.mc-ap-brand-icon { display:grid; place-items:center; width:42px; height:42px; border-radius:13px; background:#fff2e0; font-size:24px; }
+.mc-ap-brand strong,.mc-ap-brand small { display:block; }
+.mc-ap-brand strong { font-size:21px; color:#e88300; }
+.mc-ap-brand small { color:#858b96; font-size:12px; }
+.mc-ap-nav-title { font-size:10px; letter-spacing:1.3px; font-weight:800; color:#a3a7b0; padding:0 13px 12px; }
+.mc-ap-sidebar nav { display:grid; gap:6px; }
+.mc-ap-sidebar nav button { width:100%; display:flex; align-items:center; gap:13px; text-align:left; background:transparent; border:0; border-radius:11px; padding:13px 15px; color:#656b76; font:inherit; font-weight:650; cursor:pointer; }
+.mc-ap-sidebar nav button:hover { background:#fff5e8; color:#df7d00; }
+.mc-ap-sidebar nav button.mc-ap-nav-active { background:#fff0dd; color:#e88300; }
+.mc-ap-sidebar-footer { margin-top:auto; color:#adb0b8; font-size:12px; padding:16px 12px 0; }
+.mc-ap-main { flex:1; min-width:0; max-width:1500px; padding:35px 40px 60px; }
+.mc-ap-heading { display:flex; justify-content:space-between; align-items:center; gap:20px; margin-bottom:26px; }
+.mc-ap-eyebrow { color:#e88300; font-weight:800; letter-spacing:1.2px; font-size:11px; }
+.mc-ap-heading h1 { font-size:clamp(24px,3vw,32px); line-height:1.2; margin:8px 0; font-weight:800; }
+.mc-ap-heading p,.mc-ap-panel-head p { color:#8b909a; margin:0; font-size:14px; }
+.mc-ap-tabs { display:inline-flex; align-items:center; gap:8px; padding:7px; background:#e9ebf0; border-radius:13px; margin-bottom:24px; }
+.mc-ap-tabs button { border:1px solid transparent; background:transparent; color:#646b77; padding:13px 25px; border-radius:9px; font:inherit; font-size:14px; font-weight:750; cursor:pointer; transition:background .2s,color .2s,box-shadow .2s; }
+.mc-ap-tabs button:hover { background:#fff8f0; color:#e88300; }
+.mc-ap-tabs button.mc-ap-tab-active,.mc-ap-tabs button.mc-ap-tab-active:hover { background:#f18a04; color:white; box-shadow:0 4px 12px #f18a0440; }
+.mc-ap-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin-bottom:24px; }
+.mc-ap-stat { padding:24px; border-radius:15px; background:#fff; border:1px solid var(--mc-ap-border); box-shadow:0 3px 12px #20253105; }
+.mc-ap-stat span,.mc-ap-stat small { display:block; color:#858b96; font-size:13px; }
+.mc-ap-stat strong { display:block; font-size:34px; margin:10px 0 6px; }
+.mc-ap-panel { background:#fff; border:1px solid var(--mc-ap-border); border-radius:16px; overflow:hidden; box-shadow:0 4px 16px #20253105; }
+.mc-ap-panel-head { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:25px 26px 18px; }
+.mc-ap-panel-head h2 { margin:0 0 6px; font-size:19px; }
+.mc-ap-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; border-radius:10px; padding:12px 18px; font:inherit; font-weight:750; font-size:13px; cursor:pointer; border:1px solid transparent; white-space:nowrap; }
+.mc-ap-btn:disabled { opacity:.55; cursor:not-allowed; }
+.mc-ap-btn-primary { background:#f18a04; color:#fff; }
+.mc-ap-btn-primary:hover:not(:disabled) { background:#df7d00; }
+.mc-ap-btn-outline { background:#fff; color:#545b66; border-color:#e0e3e9; }
+.mc-ap-btn-outline:hover:not(:disabled) { background:#fff6ea; border-color:#f18a04; }
+.mc-ap-filters { display:flex; gap:12px; padding:0 26px 22px; }
+.mc-ap-filters input,.mc-ap-filters select,.mc-ap-form-grid input,.mc-ap-form-grid select,.mc-ap-form-grid textarea,.mc-ap-category-label input { min-width:0; width:100%; padding:12px 13px; border:1px solid #dfe2e9; border-radius:9px; outline:none; background:#fff; color:#333; font:inherit; font-size:13px; }
+.mc-ap-filters input:focus,.mc-ap-filters select:focus,.mc-ap-form-grid input:focus,.mc-ap-form-grid select:focus,.mc-ap-form-grid textarea:focus,.mc-ap-category-label input:focus { border-color:#f18a04; box-shadow:0 0 0 3px #f18a0420; }
+.mc-ap-filters input { flex:2; }
+.mc-ap-filters select { flex:1; }
+.mc-ap-table-wrap { width:100%; overflow-x:auto; }
+.mc-ap-table { width:100%; border-collapse:collapse; text-align:left; font-size:13px; }
+.mc-ap-table th { background:#fafbfc; color:#858b96; font-size:11px; text-transform:uppercase; letter-spacing:.6px; padding:15px 22px; font-weight:800; white-space:nowrap; }
+.mc-ap-table td { border-top:1px solid #f0f1f4; padding:17px 22px; vertical-align:middle; }
+.mc-ap-table td strong { color:#2b303a; }
+.mc-ap-product-cell { display:flex; gap:12px; align-items:center; min-width:220px; }
+.mc-ap-product-cell img,.mc-ap-product-placeholder { width:46px; height:46px; flex-shrink:0; border-radius:10px; object-fit:cover; background:#fff2e1; }
+.mc-ap-product-placeholder { display:grid; place-items:center; font-size:24px; }
+.mc-ap-product-cell small { display:block; color:#9599a3; font-size:11px; margin-top:5px; max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.mc-ap-price { font-weight:750; white-space:nowrap; }
+.mc-ap-status { display:inline-block; padding:6px 11px; border-radius:999px; font-weight:750; font-size:11px; }
+.mc-ap-status-on { background:#e8f8ee; color:#168147; }
+.mc-ap-status-off { background:#f0f1f4; color:#757b85; }
+.mc-ap-actions { display:flex; gap:8px; }
+.mc-ap-actions button { padding:8px 10px; background:#fff; border:1px solid #e4e5eb; border-radius:8px; font:inherit; font-size:12px; font-weight:700; cursor:pointer; color:#555; }
+.mc-ap-actions button:hover { color:#e88300; border-color:#f18a04; background:#fff8f0; }
+.mc-ap-empty { padding:35px; text-align:center; color:#90949e; }
+.mc-ap-alert { display:flex; justify-content:space-between; gap:15px; align-items:center; padding:13px 17px; border-radius:10px; margin-bottom:18px; font-size:13px; }
+.mc-ap-alert button { background:none; border:0; font-size:20px; cursor:pointer; }
+.mc-ap-alert-error { background:#fff0f0; color:#a62929; }
+.mc-ap-alert-ok { background:#e9f8ed; color:#23733c; }
+.mc-ap-overlay { position:fixed; z-index:9999; inset:0; background:#131a29a8; display:flex; justify-content:center; align-items:center; padding:20px; }
+.mc-ap-modal { background:#fff; border-radius:17px; width:min(680px,100%); max-height:92vh; overflow-y:auto; padding:25px; box-shadow:0 22px 70px #0003; }
+.mc-ap-modal-small { width:min(440px,100%); }
+.mc-ap-modal-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:23px; }
+.mc-ap-modal-head h2 { margin:0; font-size:21px; }
+.mc-ap-modal-head button { background:transparent; border:0; color:#747985; font-size:28px; cursor:pointer; }
+.mc-ap-form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:17px; }
+.mc-ap-form-grid label,.mc-ap-category-label { display:flex; flex-direction:column; gap:8px; font-size:12px; font-weight:750; color:#4b505b; }
+.mc-ap-form-grid .mc-ap-full { grid-column:1/-1; }
+.mc-ap-form-grid .mc-ap-check { flex-direction:row; align-items:center; }
+.mc-ap-check input { width:auto; }
+.mc-ap-modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:25px; }
+@media(max-width:1000px) { .mc-ap-sidebar { width:200px; } .mc-ap-main { padding:28px 22px; } }
+@media(max-width:720px) { .mc-ap-page { display:block; } .mc-ap-sidebar { min-height:0; width:100%; padding:12px; } .mc-ap-brand { padding:0 0 12px; } .mc-ap-nav-title,.mc-ap-sidebar-footer { display:none; } .mc-ap-sidebar nav { display:flex; } .mc-ap-sidebar nav button { justify-content:center; padding:10px; font-size:12px; } .mc-ap-main { padding:22px 14px; } .mc-ap-heading { align-items:flex-start; } .mc-ap-heading .mc-ap-btn { padding:10px; } .mc-ap-stats { gap:9px; } .mc-ap-stat { padding:15px 10px; } .mc-ap-stat strong { font-size:25px; } .mc-ap-stat span,.mc-ap-stat small { font-size:11px; } .mc-ap-panel-head { padding:18px; flex-wrap:wrap; } .mc-ap-filters { padding:0 18px 18px; flex-direction:column; } .mc-ap-tabs { display:flex; } .mc-ap-tabs button { flex:1; padding:12px; } .mc-ap-form-grid { grid-template-columns:1fr; } }
+
+
+/* ==========================================
+   MESACLICK - NOTIFICACIONES PROFESIONALES
+   ========================================== */
+
+.mesaclick-alert-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(22, 25, 32, 0.65);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: mcFadeIn 0.25s ease;
+}
+
+.mesaclick-alert-modal {
+    width: 100%;
+    max-width: 580px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(241, 138, 4, 0.25);
+    animation: mcSlideUp 0.3s ease;
+}
+
+/* ENCABEZADO */
+
+.mesaclick-alert-header {
+    background: linear-gradient(
+        135deg,
+        #f18a04 0%,
+        #ed7900 60%,
+        #d95d00 100%
+    );
+    color: #ffffff;
+    padding: 25px 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.mesaclick-alert-icon {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 27px;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.mesaclick-alert-title {
+    margin: 0;
+    color: #ffffff;
+    font-size: 23px;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+/* CONTENIDO */
+
+.mesaclick-alert-body {
+    padding: 28px;
+}
+
+.mesaclick-alert-description {
+    margin: 0 0 22px;
+    color: #444444;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+/* LISTA DE PRODUCTOS */
+
+.mesaclick-alert-products {
+    border: 1px solid #ffd19b;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 22px;
+    background: #ffffff;
+}
+
+.mesaclick-alert-products-title {
+    padding: 13px 18px;
+    background: #fff0dc;
+    color: #bd5800;
+    font-size: 15px;
+    font-weight: 800;
+    border-bottom: 1px solid #ffd19b;
+}
+
+.mesaclick-alert-product {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333333;
+}
+
+.mesaclick-alert-product + .mesaclick-alert-product {
+    border-top: 1px solid #f0f0f0;
+}
+
+.mesaclick-alert-product-icon {
+    color: #e97700;
+    font-size: 22px;
+}
+
+/* MENSAJE INFORMATIVO */
+
+.mesaclick-alert-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    background: #fff4e6;
+    border-radius: 10px;
+    color: #704419;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.mesaclick-alert-info-icon {
+    flex-shrink: 0;
+    color: #e97700;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+/* BOTONES */
+
+.mesaclick-alert-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.mesaclick-alert-cancel,
+.mesaclick-alert-confirm {
+    border-radius: 10px;
+    padding: 13px 20px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.mesaclick-alert-cancel {
+    background: #ffffff;
+    color: #555555;
+    border: 1px solid #d8d8d8;
+}
+
+.mesaclick-alert-cancel:hover {
+    background: #f5f5f5;
+}
+
+.mesaclick-alert-confirm {
+    background: #f18a04;
+    color: #ffffff;
+    border: 1px solid #f18a04;
+    box-shadow: 0 4px 12px rgba(241, 138, 4, 0.2);
+}
+
+.mesaclick-alert-confirm:hover {
+    background: #df7900;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 16px rgba(241, 138, 4, 0.3);
+}
+
+.mesaclick-alert-cancel:focus-visible,
+.mesaclick-alert-confirm:focus-visible {
+    outline: 3px solid #ffba60;
+    outline-offset: 3px;
+}
+
+/* ANIMACIONES */
+
+@keyframes mcFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes mcSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* DISEÑO RESPONSIVE */
+
+@media (max-width: 600px) {
+    .mesaclick-alert-overlay {
+        padding: 14px;
+    }
+
+    .mesaclick-alert-modal {
+        border-radius: 15px;
+    }
+
+    .mesaclick-alert-header {
+        padding: 20px;
+        gap: 12px;
+    }
+
+    .mesaclick-alert-icon {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        font-size: 23px;
+    }
+
+    .mesaclick-alert-title {
+        font-size: 19px;
+    }
+
+    .mesaclick-alert-body {
+        padding: 20px;
+    }
+
+    .mesaclick-alert-actions {
+        flex-direction: column-reverse;
+    }
+
+    .mesaclick-alert-cancel,
+    .mesaclick-alert-confirm {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mesaclick-alert-overlay,
+    .mesaclick-alert-modal {
+        animation: none;
+    }
+}
+
+/* MESACLICK — Modales de notificación. Pegar al final de src/index.css */
+.mesaclick-alert-overlay{position:fixed;inset:0;z-index:9999;background:rgba(22,25,32,.65);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:20px;animation:mcFadeIn .25s ease}
+.mesaclick-alert-modal{width:100%;max-width:580px;max-height:90vh;overflow-y:auto;background:#fff;border-radius:18px;box-shadow:0 25px 70px rgba(0,0,0,.25);border:1px solid rgba(241,138,4,.25);animation:mcSlideUp .3s ease}
+.mesaclick-alert-header{background:linear-gradient(135deg,#f18a04 0%,#ed7900 60%,#d95d00 100%);color:#fff;padding:25px 28px;display:flex;align-items:center;gap:16px}
+.mesaclick-alert-icon{width:52px;height:52px;min-width:52px;border:2px solid rgba(255,255,255,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:27px;font-weight:800;color:#fff}
+.mesaclick-alert-title{margin:0;color:#fff;font-size:23px;font-weight:800;line-height:1.3}
+.mesaclick-alert-body{padding:28px}
+.mesaclick-alert-description{margin:0 0 22px;color:#444;font-size:15px;line-height:1.7}
+.mesaclick-alert-products{border:1px solid #ffd19b;border-radius:12px;overflow:hidden;margin-bottom:22px;background:#fff}
+.mesaclick-alert-products-title{padding:13px 18px;background:#fff0dc;color:#bd5800;font-size:15px;font-weight:800;border-bottom:1px solid #ffd19b}
+.mesaclick-alert-product{display:flex;align-items:center;gap:12px;padding:15px 18px;font-size:14px;font-weight:600;color:#333}
+.mesaclick-alert-product+.mesaclick-alert-product{border-top:1px solid #f0f0f0}
+.mesaclick-alert-product-icon{color:#e97700;font-size:22px}
+.mesaclick-alert-info{display:flex;align-items:flex-start;gap:12px;padding:16px;background:#fff4e6;border-radius:10px;color:#704419;font-size:14px;line-height:1.6;margin-bottom:24px}
+.mesaclick-alert-info-icon{flex-shrink:0;color:#e97700;font-size:20px;font-weight:800}
+.mesaclick-alert-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px}
+.mesaclick-alert-cancel,.mesaclick-alert-confirm{border-radius:10px;padding:13px 20px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s ease,transform .2s ease,box-shadow .2s ease}
+.mesaclick-alert-cancel{background:#fff;color:#555;border:1px solid #d8d8d8}
+.mesaclick-alert-cancel:hover{background:#f5f5f5}
+.mesaclick-alert-confirm{background:#f18a04;color:#fff;border:1px solid #f18a04;box-shadow:0 4px 12px rgba(241,138,4,.2)}
+.mesaclick-alert-confirm:hover{background:#df7900;transform:translateY(-2px);box-shadow:0 7px 16px rgba(241,138,4,.3)}
+.mesaclick-alert-cancel:focus-visible,.mesaclick-alert-confirm:focus-visible{outline:3px solid #ffba60;outline-offset:3px}
+@keyframes mcFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes mcSlideUp{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:600px){.mesaclick-alert-overlay{padding:14px}.mesaclick-alert-modal{border-radius:15px}.mesaclick-alert-header{padding:20px;gap:12px}.mesaclick-alert-icon{width:42px;height:42px;min-width:42px;font-size:23px}.mesaclick-alert-title{font-size:19px}.mesaclick-alert-body{padding:20px}.mesaclick-alert-actions{flex-direction:column-reverse}.mesaclick-alert-cancel,.mesaclick-alert-confirm{width:100%}}
+@media(prefers-reduced-motion:reduce){.mesaclick-alert-overlay,.mesaclick-alert-modal{animation:none}}

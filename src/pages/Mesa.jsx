@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { obtenerProductos } from "../services/productoService";
 import { obtenerCategorias } from "../services/categoriaService";
-import { useNavigate } from "react-router-dom"; 
+
 
 function Mesa() {
 
     const [historialPedidos, setHistorialPedidos] = useState([]);
+    const [mensajePedido, setMensajePedido] = useState("");
+    const [productosNoDisponibles, setProductosNoDisponibles] = useState([]);
+    const [enviandoPedido, setEnviandoPedido] = useState(false);
 
     const navigate = useNavigate();
 
@@ -301,9 +304,85 @@ function solicitarEliminarPersona() {
 }
 
 
-async function enviarPedido() {
+async function actualizarCatalogo() {
+    const [productosActualizados, categoriasActualizadas] = await Promise.all([
+        obtenerProductos(),
+        obtenerCategorias()
+    ]);
+    setProductos(productosActualizados);
+    setCategorias(categoriasActualizadas);
+    setCategoriaSeleccionada((actual) =>
+        actual !== null && !categoriasActualizadas.some(
+            (categoria) => categoria.idCategoria === actual
+        ) ? null : actual
+    );
+    return productosActualizados;
+}
 
+function revisarCarrito(productosDisponibles) {
+    const disponiblesPorId = new Map(
+        productosDisponibles.map((producto) => [producto.idProducto, producto])
+    );
+    const noDisponibles = [];
+    const preciosCambiados = [];
+    for (const persona of personas) {
+        for (const item of persona.productos) {
+            const actualizado = disponiblesPorId.get(item.idProducto);
+            if (!actualizado) {
+                if (!noDisponibles.some((p) => p.idProducto === item.idProducto)) {
+                    noDisponibles.push({
+                        idProducto: item.idProducto,
+                        nombreProducto: item.nombreProducto
+                    });
+                }
+            } else if (actualizado.precioProducto !== item.precioProducto) {
+                if (!preciosCambiados.some((p) => p.idProducto === item.idProducto)) {
+                    preciosCambiados.push(actualizado);
+                }
+            }
+        }
+    }
+    setProductosNoDisponibles(noDisponibles);
+    if (preciosCambiados.length > 0) {
+        setPersonas((actuales) => actuales.map((persona) => ({
+            ...persona,
+            productos: persona.productos.map((item) => {
+                const actualizado = disponiblesPorId.get(item.idProducto);
+                return actualizado ? { ...item, ...actualizado, cantidad: item.cantidad } : item;
+            })
+        })));
+    }
+    return { noDisponibles, preciosCambiados };
+}
+
+function quitarProductosNoDisponibles() {
+    const ids = new Set(productosNoDisponibles.map((p) => p.idProducto));
+    setPersonas((actuales) => actuales.map((persona) => ({
+        ...persona,
+        productos: persona.productos.filter((item) => !ids.has(item.idProducto))
+    })));
+    setProductosNoDisponibles([]);
+    setMensajePedido("");
+    setConfirmacionAbierta(false);
+    setCarritoAbierto(true);
+}
+
+async function enviarPedido() {
+    if (enviandoPedido) return;
+    setEnviandoPedido(true);
+    setMensajePedido("");
     try {
+        // Comprobar el catálogo antes de enviar, sin borrar el carrito.
+        const catalogoActual = await actualizarCatalogo();
+        const { noDisponibles, preciosCambiados } = revisarCarrito(catalogoActual);
+        if (noDisponibles.length > 0) {
+            setMensajePedido("Algunos productos ya no están disponibles. Retíralos para continuar.");
+            return;
+        }
+        if (preciosCambiados.length > 0) {
+            setMensajePedido("Algunos precios cambiaron. Revisa el total actualizado y confirma nuevamente.");
+            return;
+        }
 
         const pedidoRequest = {
 
@@ -351,11 +430,14 @@ async function enviarPedido() {
 
 
         if (!respuesta.ok) {
-
-            throw new Error(
-                "No se pudo guardar el pedido"
-            );
-
+            if (respuesta.status === 409) {
+                // La disponibilidad pudo cambiar entre la comprobación y el POST.
+                const catalogoActual = await actualizarCatalogo();
+                revisarCarrito(catalogoActual);
+                setMensajePedido("El pedido no se pudo confirmar porque cambió la disponibilidad. Revisa los productos del carrito.");
+                return;
+            }
+            throw new Error("No se pudo guardar el pedido. Inténtalo nuevamente.");
         }
 
 
@@ -397,13 +479,11 @@ async function enviarPedido() {
 
     } catch (error) {
 
-        console.error(
-            "ERROR AL ENVIAR EL PEDIDO:",
-            error
-        );
-
+        console.error("ERROR AL ENVIAR EL PEDIDO:", error);
+        setMensajePedido(error.message || "Ocurrió un error al enviar el pedido.");
+    } finally {
+        setEnviandoPedido(false);
     }
-
 }
 
     useEffect(() => {
@@ -434,39 +514,79 @@ async function enviarPedido() {
 
     }, [codigo]);
 
-    useEffect(() => {
+    
+useEffect(() => {
 
     if (!mesa) {
         return;
     }
 
-    obtenerHistorialPedidos();
+    let activo = true;
 
-}, [mesa]);
-
-    useEffect(() => {
-
-    async function cargarMenu() {
-
+    const actualizarHistorial = async () => {
         try {
+            const respuesta = await fetch(
+                `/api/pedidos/mesa/${mesa.id_mesa}`,
+                { cache: "no-store" }
+            );
 
-            const productosData = await obtenerProductos();
-            const categoriasData = await obtenerCategorias();
+            if (!respuesta.ok) {
+                throw new Error("Error al consultar pedidos");
+            }
 
-            setProductos(productosData);
-            setCategorias(categoriasData);
+            const pedidos = await respuesta.json();
+
+            if (activo) {
+                setHistorialPedidos(pedidos);
+            }
 
         } catch (error) {
-
-            console.error("Error cargando el menú:", error);
-
+            console.error(
+                "Error actualizando historial:",
+                error
+            );
         }
+    };
 
-    }
+    actualizarHistorial();
 
-    cargarMenu();
+    const intervalo = setInterval(
+        actualizarHistorial,
+        5000
+    );
 
-}, []);
+    return () => {
+        activo = false;
+        clearInterval(intervalo);
+    };
+
+}, [mesa?.id_mesa]);
+
+
+    useEffect(() => {
+        let activo = true;
+        const cargarMenu = async () => {
+            try {
+                const [productosData, categoriasData] = await Promise.all([
+                    obtenerProductos(), obtenerCategorias()
+                ]);
+                if (!activo) return;
+                setProductos(productosData);
+                setCategorias(categoriasData);
+            } catch (error) {
+                console.error("Error cargando el menú:", error);
+            }
+        };
+        cargarMenu();
+        const actualizarAlVolver = () => {
+            if (document.visibilityState === "visible") cargarMenu();
+        };
+        document.addEventListener("visibilitychange", actualizarAlVolver);
+        return () => {
+            activo = false;
+            document.removeEventListener("visibilitychange", actualizarAlVolver);
+        };
+    }, []);
 
     if (cargando) {
         return (
@@ -517,6 +637,8 @@ async function enviarPedido() {
                 </div>
 
             </div>
+
+
 
         </main>
     );
@@ -1162,8 +1284,9 @@ async function enviarPedido() {
                 <button
     className="confirm-final"
     onClick={enviarPedido}
+    disabled={enviandoPedido}
 >
-    Confirmar pedido ✓
+    {enviandoPedido ? "Comprobando disponibilidad..." : "Confirmar pedido ✓"}
 </button>
 
             </div>
@@ -1230,73 +1353,6 @@ async function enviarPedido() {
 >
     Agregar
 </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-)}
-
-{mostrarAgregarPersona && (
-
-    <div className="delete-overlay">
-
-        <div className="delete-modal">
-
-            <div className="delete-icon">
-                👤
-            </div>
-
-            <h2>
-                Agregar persona
-            </h2>
-
-            <p>
-                ¿Cómo se llama esta persona?
-            </p>
-
-            <input
-                type="text"
-                className="person-name-input"
-                placeholder="Ej. María"
-                id="nombrePersona"
-            />
-
-            <div className="delete-actions">
-
-                <button
-                    className="cancel-delete"
-                    onClick={() =>
-                        setMostrarAgregarPersona(false)
-                    }
-                >
-                    Cancelar
-                </button>
-
-                <button
-                    className="confirm-delete"
-                    onClick={() => {
-
-                        const input =
-                            document.getElementById("nombrePersona");
-
-                        const nombre =
-                            input.value.trim();
-
-                        if (!nombre) {
-                            return;
-                        }
-
-                        agregarPersona(nombre);
-
-                        setMostrarAgregarPersona(false);
-
-                    }}
-                >
-                    Agregar
-                </button>
 
             </div>
 
@@ -1400,6 +1456,89 @@ async function enviarPedido() {
 
     </div>
 )}
+
+{/* AVISO PROFESIONAL DE MESACLICK */}
+{mensajePedido && (
+    <div className="mesaclick-alert-overlay">
+        <div
+            className="mesaclick-alert-modal"
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="mc-alert-title"
+            aria-describedby="mc-alert-description"
+        >
+            <div className="mesaclick-alert-header">
+                <div className="mesaclick-alert-icon" aria-hidden="true">!</div>
+                <h2 className="mesaclick-alert-title" id="mc-alert-title">
+                    {productosNoDisponibles.length > 0
+                        ? "Productos no disponibles"
+                        : mensajePedido.toLowerCase().includes("precio")
+                            ? "Precios actualizados"
+                            : "No fue posible confirmar el pedido"}
+                </h2>
+            </div>
+            <div className="mesaclick-alert-body">
+                <p className="mesaclick-alert-description" id="mc-alert-description">
+                    {mensajePedido}
+                </p>
+                {productosNoDisponibles.length > 0 && (
+                    <div className="mesaclick-alert-products">
+                        <div className="mesaclick-alert-products-title">
+                            Productos no disponibles
+                        </div>
+                        {productosNoDisponibles.map((producto) => (
+                            <div className="mesaclick-alert-product" key={producto.idProducto}>
+                                <span className="mesaclick-alert-product-icon" aria-hidden="true">⚠</span>
+                                <span>{producto.nombreProducto}</span>
+                            </div>
+                        ))}
+                    </div>
+                )}
+                <div className="mesaclick-alert-info">
+                    <span className="mesaclick-alert-info-icon" aria-hidden="true">ⓘ</span>
+                    <span>
+                        {productosNoDisponibles.length > 0
+                            ? "Para continuar, retira los productos no disponibles y revisa tu pedido antes de confirmarlo."
+                            : mensajePedido.toLowerCase().includes("precio")
+                                ? "Los importes se han actualizado según el menú vigente. Revisa el total antes de continuar."
+                                : "Puedes revisar el pedido e intentarlo nuevamente. No se eliminarán los productos de tu carrito."}
+                    </span>
+                </div>
+                <div className="mesaclick-alert-actions">
+                    <button
+                        type="button"
+                        className="mesaclick-alert-cancel"
+                        onClick={() => setMensajePedido("")}
+                    >
+                        Cerrar
+                    </button>
+                    {productosNoDisponibles.length > 0 ? (
+                        <button
+                            type="button"
+                            className="mesaclick-alert-confirm"
+                            onClick={quitarProductosNoDisponibles}
+                        >
+                            Quitar productos y editar pedido
+                        </button>
+                    ) : (
+                        <button
+                            type="button"
+                            className="mesaclick-alert-confirm"
+                            onClick={() => {
+                                setMensajePedido("");
+                                setConfirmacionAbierta(false);
+                                setCarritoAbierto(true);
+                            }}
+                        >
+                            Revisar pedido
+                        </button>
+                    )}
+                </div>
+            </div>
+        </div>
+    </div>
+)}
+
 
         </main>
     );

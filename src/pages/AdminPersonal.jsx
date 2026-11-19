@@ -336,11 +336,13 @@ setUsuarios(datos);
                         Personal
                     </button>
 
-                    <button className="admin-nav-item disabled">
-                        <span>▣</span>
-                        Productos
-                        <small>Próximamente</small>
-                    </button>
+                    <button
+    className="admin-nav-item"
+    onClick={() => navigate("/admin/productos")}
+>
+    <span>▣</span>
+    Productos
+</button>
 
                     <button className="admin-nav-item disabled">
                         <span>▤</span>

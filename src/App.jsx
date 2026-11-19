@@ -11,6 +11,7 @@ import LoginPersonal from "./pages/LoginPersonal";
 import LoginAdmin from "./pages/LoginAdmin";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminPersonal from "./pages/AdminPersonal";
+import AdminProductos from "./pages/AdminProductos";
 
 import MeseroDashboard from "./pages/MeseroDashboard";
 import PanelCocina from "./pages/PanelCocina";
@@ -155,6 +156,19 @@ function App() {
                         </RutaProtegida>
                     }
                 />
+
+                {/* Gestión de productos protegida */}
+<Route
+    path="/admin/productos"
+    element={
+        <RutaProtegida
+            rolPermitido="ADMIN"
+            loginPath="/admin/login"
+        >
+            <AdminProductos />
+        </RutaProtegida>
+    }
+/>
 
                 {/* Página no encontrada */}
                 <Route
