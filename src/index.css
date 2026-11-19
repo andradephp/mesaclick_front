@@ -9132,3 +9132,226 @@ button {
 @keyframes mcSlideUp{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(max-width:600px){.mesaclick-alert-overlay{padding:14px}.mesaclick-alert-modal{border-radius:15px}.mesaclick-alert-header{padding:20px;gap:12px}.mesaclick-alert-icon{width:42px;height:42px;min-width:42px;font-size:23px}.mesaclick-alert-title{font-size:19px}.mesaclick-alert-body{padding:20px}.mesaclick-alert-actions{flex-direction:column-reverse}.mesaclick-alert-cancel,.mesaclick-alert-confirm{width:100%}}
 @media(prefers-reduced-motion:reduce){.mesaclick-alert-overlay,.mesaclick-alert-modal{animation:none}}
+
+/* MESACLICK - IMÁGENES DE PRODUCTOS */
+
+.product-image {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 16px;
+    display: block;
+}
+
+
+/* GRÁFICO DE VENTAS */
+
+.admin-grafico-ventas {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 25px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+}
+
+.admin-grafico-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.admin-grafico-header h2 {
+  font-size: 21px;
+  margin: 0 0 6px;
+}
+
+.admin-grafico-header p {
+  color: #777;
+  margin: 0;
+}
+
+.admin-grafico-filtros {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-grafico-filtros select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+}
+
+.admin-grafico-total {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 20px;
+}
+
+.admin-grafico-total span {
+  color: #777;
+  font-size: 14px;
+}
+
+.admin-grafico-total strong {
+  font-size: 27px;
+  color: #f18a04;
+}
+
+@media (max-width: 768px) {
+  .admin-grafico-ventas {
+    padding: 16px;
+  }
+
+  .admin-grafico-filtros {
+    width: 100%;
+  }
+
+  .admin-grafico-filtros select {
+    flex: 1;
+  }
+}
+
+
+/* ==========================================
+   ADMIN - PRODUCTOS MAS VENDIDOS
+========================================== */
+
+.admin-productos-vendidos {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    margin-top: 25px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+}
+
+.admin-productos-header {
+    margin-bottom: 20px;
+}
+
+.admin-productos-header h2 {
+    margin: 0 0 6px;
+    font-size: 21px;
+}
+
+.admin-productos-header p {
+    margin: 0;
+    color: #777;
+}
+
+.admin-productos-resumen {
+    display: flex;
+    gap: 35px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.admin-productos-resumen > div {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.admin-productos-resumen span {
+    color: #777;
+    font-size: 14px;
+}
+
+.admin-productos-resumen strong {
+    font-size: 24px;
+    color: #f18a04;
+}
+
+@media (max-width: 768px) {
+    .admin-productos-vendidos {
+        padding: 16px;
+    }
+
+    .admin-productos-resumen {
+        gap: 20px;
+    }
+}
+
+
+/* ==========================================
+   ADMIN - PRODUCTOS MAS VENDIDOS
+========================================== */
+
+.admin-productos-vendidos {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    margin-top: 25px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+}
+
+.admin-productos-header {
+    margin-bottom: 25px;
+}
+
+.admin-productos-header h2 {
+    margin: 0 0 6px;
+    font-size: 21px;
+}
+
+.admin-productos-header p {
+    margin: 0;
+    color: #777;
+    font-size: 14px;
+}
+
+.admin-productos-grafico {
+    width: 100%;
+    height: 340px;
+}
+
+.admin-productos-lista {
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.admin-productos-fila {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 20px;
+    align-items: center;
+    padding: 13px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+}
+
+.admin-productos-fila strong {
+    color: #f18a04;
+}
+
+@media (max-width: 768px) {
+
+    .admin-productos-vendidos {
+        padding: 16px;
+    }
+
+    .admin-productos-grafico {
+        height: 320px;
+    }
+
+    .admin-productos-fila {
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+    }
+
+    .admin-productos-fila strong {
+        grid-column: 2;
+    }
+}
+

@@ -4,6 +4,38 @@ import { obtenerProductos } from "../services/productoService";
 import { obtenerCategorias } from "../services/categoriaService";
 
 
+// Convierte las rutas de imagen del backend en direcciones accesibles desde React.
+const API_IMAGENES = (import.meta.env.VITE_API_URL || "http://localhost:8080").replace(/\/$/, "");
+
+function urlImagenProducto(imagenProducto) {
+    if (!imagenProducto || typeof imagenProducto !== "string") return null;
+    const ruta = imagenProducto.trim();
+    if (!ruta) return null;
+    if (/^https?:\/\//i.test(ruta)) return ruta;
+    if (ruta.startsWith("//")) return null;
+    return `${API_IMAGENES}/${ruta.replace(/^\/+/, "")}`;
+}
+
+function ImagenProducto({ producto }) {
+    const [falloImagen, setFalloImagen] = useState(false);
+    const url = urlImagenProducto(producto.imagenProducto);
+
+    if (!url || falloImagen) {
+        return <span role="img" aria-label="Producto sin fotografía">🍽️</span>;
+    }
+
+    return (
+        <img
+            src={url}
+            alt={producto.nombreProducto || "Fotografía del producto"}
+            loading="lazy"
+            onError={() => setFalloImagen(true)}
+            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+        />
+    );
+}
+
+
 function Mesa() {
 
     const [historialPedidos, setHistorialPedidos] = useState([]);
@@ -755,9 +787,10 @@ useEffect(() => {
             >
 
                 <div className="product-image">
-
-                    🍽️
-
+                    <ImagenProducto
+                        key={producto.imagenProducto || "sin-imagen"}
+                        producto={producto}
+                    />
                 </div>
 
                 <div className="product-info">

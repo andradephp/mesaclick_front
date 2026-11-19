@@ -12,6 +12,7 @@ function MeseroDashboard() {
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
     const [entregando, setEntregando] = useState(null);
+    const [errorEntrega, setErrorEntrega] = useState("");
 
     // Modal para registrar un nuevo pedido
     const [mostrarModal, setMostrarModal] = useState(false);
@@ -71,9 +72,16 @@ function MeseroDashboard() {
         }
 
         const idPedido = mostrarModalEntrega.idPedido;
+        if (mostrarModalEntrega.estadoPedido !== "LISTO") {
+            setMostrarModalEntrega(null);
+            setErrorEntrega("El pedido aún está en preparación. Cocina debe marcarlo como LISTO antes de entregarlo.");
+            await cargarPedidos();
+            return;
+        }
 
         try {
             setEntregando(idPedido);
+            setErrorEntrega("");
 
             const token = localStorage.getItem("token");
 
@@ -90,21 +98,26 @@ function MeseroDashboard() {
             );
 
             if (!respuesta.ok) {
-                throw new Error(
-                    `No se pudo entregar el pedido. Código: ${respuesta.status}`
-                );
+                if (respuesta.status === 409) {
+                    await cargarPedidos();
+                    throw new Error("El estado del pedido cambió. Actualizamos la lista; solo se pueden entregar pedidos LISTOS.");
+                }
+                if (respuesta.status === 401 || respuesta.status === 403) {
+                    throw new Error("Tu sesión no tiene permiso para entregar pedidos. Inicia sesión como MESERO.");
+                }
+                throw new Error(`No se pudo entregar el pedido (${respuesta.status}).`);
             }
 
             // Cerrar el modal después de confirmar la operación
             setMostrarModalEntrega(null);
+            setErrorEntrega("");
 
             // Actualizar los pedidos y el historial sin recargar la página
             await cargarPedidos();
         } catch (error) {
             console.error("Error al entregar el pedido:", error);
-            window.alert(
-                error.message || "Ocurrió un error al entregar el pedido."
-            );
+            setMostrarModalEntrega(null);
+            setErrorEntrega(error.message || "Ocurrió un error al entregar el pedido.");
         } finally {
             setEntregando(null);
         }
@@ -270,6 +283,8 @@ function MeseroDashboard() {
                         <span className="mesero-nuevo-entregado">
                             {estaPagado ? "Cuenta pagada y cerrada" : "Entrega confirmada"}
                         </span>
+                    ) : pedido.estadoPedido !== "LISTO" ? (
+                        <span className="mesero-nuevo-entregado">Esperando a Cocina</span>
                     ) : (
                         <button
                             type="button"
@@ -432,6 +447,13 @@ function MeseroDashboard() {
                     </div>
                 )}
 
+                {errorEntrega && (
+                    <div className="mesero-nuevo-error" role="alert">
+                        <p>{errorEntrega}</p>
+                        <button type="button" onClick={() => setErrorEntrega("")}>Cerrar</button>
+                    </div>
+                )}
+
                 {!cargando && error && (
                     <div className="mesero-nuevo-error">
                         <p>{error}</p>
@@ -569,7 +591,7 @@ function MeseroDashboard() {
                                 type="button"
                                 className="confirmacion-entrega-boton confirmacion-entrega-confirmar"
                                 onClick={entregarPedido}
-                                disabled={entregando !== null}
+                                disabled={entregando !== null || mostrarModalEntrega.estadoPedido !== "LISTO"}
                             >
                                 {entregando ===
                                 mostrarModalEntrega.idPedido

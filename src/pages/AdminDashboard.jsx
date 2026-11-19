@@ -1,10 +1,78 @@
+
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { obtenerResumenEstadisticas } from "../services/estadisticasService";
+import GraficoVentas from "../components/admin/GraficoVentas";
+import ProductosMasVendidos from "../components/admin/ProductosMasVendidos";
 
 function AdminDashboard() {
-
     const navigate = useNavigate();
 
-    const nombre = localStorage.getItem("usuarioNombre") || "Administrador";
+    const [estadisticas, setEstadisticas] = useState(null);
+    const [cargando, setCargando] = useState(true);
+    const [error, setError] = useState("");
+
+    
+useEffect(() => {
+    let activo = true;
+    let consultando = false;
+
+    const cargarEstadisticas = async () => {
+        if (consultando) return;
+
+        consultando = true;
+
+        try {
+            const datos = await obtenerResumenEstadisticas();
+
+            if (activo) {
+                setEstadisticas(datos);
+                setError("");
+            }
+
+        } catch (err) {
+
+            if (activo) {
+                setError(err.message);
+            }
+
+        } finally {
+
+            consultando = false;
+
+            if (activo) {
+                setCargando(false);
+            }
+        }
+    };
+
+    // Cargar al abrir el Dashboard
+    cargarEstadisticas();
+
+    // Actualizar cada 10 segundos
+    const intervalo = setInterval(
+        cargarEstadisticas,
+        10000
+    );
+
+    // Detener las consultas al salir
+    return () => {
+        activo = false;
+        clearInterval(intervalo);
+    };
+
+}, []);
+
+
+    const formatearDinero = (valor) =>
+        new Intl.NumberFormat("es-CO", {
+            style: "currency",
+            currency: "COP",
+            maximumFractionDigits: 0,
+        }).format(valor ?? 0);
+
+    const nombre =
+        localStorage.getItem("usuarioNombre") || "Administrador";
 
     const cerrarSesion = () => {
         localStorage.removeItem("token");
@@ -43,12 +111,12 @@ function AdminDashboard() {
                     </button>
 
                     <button
-    className="admin-nav-item"
-    onClick={() => navigate("/admin/productos")}
->
-    <span>▣</span>
-    Productos
-</button>
+                        className="admin-nav-item"
+                        onClick={() => navigate("/admin/productos")}
+                    >
+                        <span>▣</span>
+                        Productos
+                    </button>
 
                     <button className="admin-nav-item disabled">
                         <span>▤</span>
@@ -80,10 +148,10 @@ function AdminDashboard() {
 
             </aside>
 
-
             {/* CONTENIDO PRINCIPAL */}
             <main className="admin-main">
 
+                {/* ENCABEZADO */}
                 <header className="admin-header">
 
                     <div>
@@ -91,9 +159,7 @@ function AdminDashboard() {
                             Panel administrativo
                         </p>
 
-                        <h1>
-                            Bienvenido, {nombre}
-                        </h1>
+                        <h1>Bienvenido, {nombre}</h1>
                     </div>
 
                     <div className="admin-user">
@@ -111,39 +177,94 @@ function AdminDashboard() {
 
                 </header>
 
-
-                {/* ESTADÍSTICAS */}
+                {/* ESTADÍSTICAS GENERALES */}
                 <section className="admin-stats">
 
-                    <div className="admin-stat-card">
+                    {cargando && (
+                        <p>Cargando estadísticas...</p>
+                    )}
 
-                        <div className="admin-stat-icon">
-                            #
-                        </div>
+                    {error && (
+                        <p style={{ color: "red" }}>
+                            {error}
+                        </p>
+                    )}
 
-                        <div>
-                            <span>Pedidos registrados</span>
-                            <strong>0</strong>
-                        </div>
+                    {!cargando && !error && estadisticas && (
+                        <>
+                            <div className="admin-stat-card">
+                                <div className="admin-stat-icon">#</div>
+                                <div>
+                                    <span>Pedidos registrados</span>
+                                    <strong>
+                                        {estadisticas.totalPedidos}
+                                    </strong>
+                                </div>
+                            </div>
 
-                    </div>
+                            <div className="admin-stat-card">
+                                <div className="admin-stat-icon">$</div>
+                                <div>
+                                    <span>Ventas confirmadas</span>
+                                    <strong>
+                                        {formatearDinero(
+                                            estadisticas.totalVentas
+                                        )}
+                                    </strong>
+                                </div>
+                            </div>
 
+                            <div className="admin-stat-card">
+                                <div className="admin-stat-icon">P</div>
+                                <div>
+                                    <span>Ticket promedio</span>
+                                    <strong>
+                                        {formatearDinero(
+                                            estadisticas.ticketPromedio
+                                        )}
+                                    </strong>
+                                </div>
+                            </div>
 
-                    <div className="admin-stat-card">
+                            <div className="admin-stat-card">
+                                <div className="admin-stat-icon">✓</div>
+                                <div>
+                                    <span>Atenciones cerradas</span>
+                                    <strong>
+                                        {estadisticas.atencionesCerradas}
+                                    </strong>
+                                </div>
+                            </div>
 
-                        <div className="admin-stat-icon">
-                            U
-                        </div>
+                            <div className="admin-stat-card">
+                                <div className="admin-stat-icon">◷</div>
+                                <div>
+                                    <span>Atenciones activas</span>
+                                    <strong>
+                                        {estadisticas.atencionesActivas}
+                                    </strong>
+                                </div>
+                            </div>
 
-                        <div>
-                            <span>Clientes registrados</span>
-                            <strong>0</strong>
-                        </div>
-
-                    </div>
+                            <div className="admin-stat-card">
+                                <div className="admin-stat-icon">✓</div>
+                                <div>
+                                    <span>Pedidos entregados</span>
+                                    <strong>
+                                        {estadisticas.pedidosEntregados}
+                                    </strong>
+                                </div>
+                            </div>
+                        </>
+                    )}
 
                 </section>
 
+                {/* GRÁFICO DE VENTAS */}
+                <GraficoVentas />
+
+                {/* PRODUCTOS MÁS VENDIDOS */}
+                <ProductosMasVendidos />
 
                 {/* GESTIÓN DE PERSONAL */}
                 <section className="admin-management-card">
@@ -155,7 +276,6 @@ function AdminDashboard() {
                         </div>
 
                         <div>
-
                             <h2>Gestión de personal</h2>
 
                             <p>
@@ -164,11 +284,9 @@ function AdminDashboard() {
                             </p>
 
                             <div className="admin-role-tags">
-
                                 <span>Cocina</span>
                                 <span>Mesero</span>
                                 <span>Cajero</span>
-
                             </div>
 
                         </div>
@@ -184,14 +302,13 @@ function AdminDashboard() {
 
                 </section>
 
-
-                {/* AVISO */}
+                {/* PRÓXIMAS FUNCIONALIDADES */}
                 <section className="admin-coming-soon">
 
                     <h2>Más funciones próximamente</h2>
 
                     <p>
-                        Productos, pedidos, reportes y configuración
+                        Pedidos, reportes y configuración
                         estarán disponibles en futuras versiones.
                     </p>
 
@@ -204,4 +321,3 @@ function AdminDashboard() {
 }
 
 export default AdminDashboard;
-
