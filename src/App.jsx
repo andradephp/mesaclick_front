@@ -1,10 +1,10 @@
-
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
+import HomeMesaClick from "./pages/HomeMesaClick";
 import Mesa from "./pages/Mesa";
 import PedidoEnviado from "./pages/PedidoEnviado";
 import IniciarSesion from "./pages/IniciarSesion";
-import Registrarse from "./pages/Registrarse";
+import RegistrarseServicio from "./pages/RegistrarseServicio"; // Vista de afiliación comercial (Natural / Jurídica)
 import Error404 from "./pages/Error404";
 
 import LoginPersonal from "./pages/LoginPersonal";
@@ -14,15 +14,7 @@ import AdminPersonal from "./pages/AdminPersonal";
 
 import MeseroDashboard from "./pages/MeseroDashboard";
 import PanelCocina from "./pages/PanelCocina";
-
-function Inicio() {
-    return (
-        <div>
-            <h1>MesaClick</h1>
-            <p>Escanea el código QR de tu mesa para comenzar.</p>
-        </div>
-    );
-}
+import CajeroDashboard from "./pages/CajeroDashboard";
 
 /* Protege las rutas privadas del personal y administrador */
 function RutaProtegida({
@@ -38,8 +30,7 @@ function RutaProtegida({
         return <Navigate to={loginPath} replace />;
     }
 
-    // Si el usuario no tiene el rol requerido,
-    // enviarlo a su propia área.
+    // Si el usuario no tiene el rol requerido, enviarlo a su propia área.
     if (rol !== rolPermitido) {
         const rutasPorRol = {
             ADMIN: "/admin/dashboard",
@@ -59,22 +50,14 @@ function RutaProtegida({
     return children;
 }
 
-function PanelCajero() {
-    return (
-        <main>
-            <h1>Panel del Cajero</h1>
-            <p>Bienvenido a tu área de trabajo en MesaClick.</p>
-        </main>
-    );
-}
-
 function App() {
     return (
         <BrowserRouter>
             <Routes>
-                {/* Cliente */}
-                <Route path="/" element={<Inicio />} />
+                {/* Página principal corporativa / Landing Page de MesaClick */}
+                <Route path="/" element={<HomeMesaClick />} />
 
+                {/* Flujo de clientes (Mesas y pedidos por QR) */}
                 <Route
                     path="/mesa/:codigo"
                     element={<Mesa />}
@@ -85,6 +68,7 @@ function App() {
                     element={<PedidoEnviado />}
                 />
 
+                {/* Rutas de autenticación y registro comercial de servicios */}
                 <Route
                     path="/iniciar-sesion"
                     element={<IniciarSesion />}
@@ -92,7 +76,7 @@ function App() {
 
                 <Route
                     path="/registrarse"
-                    element={<Registrarse />}
+                    element={<RegistrarseServicio />}
                 />
 
                 {/* Login del personal */}
@@ -135,7 +119,7 @@ function App() {
                             rolPermitido="CAJERO"
                             loginPath="/personal/login"
                         >
-                            <PanelCajero />
+                            <CajeroDashboard />
                         </RutaProtegida>
                     }
                 />

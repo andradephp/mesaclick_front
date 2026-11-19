@@ -139,11 +139,13 @@ function MeseroDashboard() {
             EN_PREPARACION: "En preparación",
             LISTO: "Listo para entregar",
             ENTREGADO: "Entregado",
+            PAGADO: "Pagado y Finalizado",
         }[estado] || estado || "Sin estado");
 
+    // FILTRO 1: Pedidos Activos (Excluye ENTREGADO y excluye PAGADO para que desaparezcan de activos)
     const pedidosActivos = useMemo(() => {
         return pedidos
-            .filter((pedido) => pedido.estadoPedido !== "ENTREGADO")
+            .filter((pedido) => pedido.estadoPedido !== "ENTREGADO" && pedido.estadoPedido !== "PAGADO")
             .sort((a, b) => {
                 const prioridad = (estado) => {
                     if (estado === "LISTO") return 0;
@@ -160,9 +162,24 @@ function MeseroDashboard() {
             });
     }, [pedidos]);
 
+    // FILTRO 2: Historial (Incluye ENTREGADO y PAGADO, pero SOLO los del DÍA DE HOY)
     const pedidosEntregados = useMemo(() => {
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0); // Inicio del día actual (00:00:00)
+
         return pedidos
-            .filter((pedido) => pedido.estadoPedido === "ENTREGADO")
+            .filter((pedido) => {
+                // Debe estar entregado o pagado
+                const esFinalizado = pedido.estadoPedido === "ENTREGADO" || pedido.estadoPedido === "PAGADO";
+                if (!esFinalizado) return false;
+
+                // Validar que la fecha pertenezca al día de hoy
+                if (!pedido.fechaPedido) return false;
+                const fechaPedido = new Date(pedido.fechaPedido);
+                fechaPedido.setHours(0, 0, 0, 0);
+
+                return fechaPedido.getTime() === hoy.getTime();
+            })
             .sort(
                 (a, b) =>
                     new Date(b.fechaPedido || 0) -
@@ -176,94 +193,99 @@ function MeseroDashboard() {
     const listaVisible =
         vista === "activos" ? pedidosActivos : pedidosEntregados;
 
-    const renderPedido = (pedido) => (
-        <article
-            key={pedido.idPedido}
-            className={`mesero-nuevo-pedido ${
-                pedido.estadoPedido === "LISTO"
-                    ? "mesero-nuevo-pedido-listo"
-                    : ""
-            }`}
-        >
-            <div className="mesero-nuevo-pedido-top">
-                <div>
-                    <span className="mesero-nuevo-id">
-                        PEDIDO #{pedido.idPedido}
-                    </span>
+    const renderPedido = (pedido) => {
+        const esHistorial = vista === "historial";
+        const estaPagado = pedido.estadoPedido === "PAGADO";
 
-                    <h3>Mesa {pedido.numeroMesa}</h3>
+        return (
+            <article
+                key={pedido.idPedido}
+                className={`mesero-nuevo-pedido ${
+                    pedido.estadoPedido === "LISTO"
+                        ? "mesero-nuevo-pedido-listo"
+                        : ""
+                }`}
+            >
+                <div className="mesero-nuevo-pedido-top">
+                    <div>
+                        <span className="mesero-nuevo-id">
+                            PEDIDO #{pedido.idPedido}
+                        </span>
 
-                    <span className="mesero-nuevo-fecha">
-                        {formatoFecha(pedido.fechaPedido)}
-                    </span>
-                </div>
+                        <h3>Mesa {pedido.numeroMesa}</h3>
 
-                <span
-                    className={`mesero-nuevo-estado estado-${(
-                        pedido.estadoPedido || "pendiente"
-                    ).toLowerCase()}`}
-                >
-                    {nombreEstado(pedido.estadoPedido)}
-                </span>
-            </div>
-
-            <div className="mesero-nuevo-productos">
-                {(pedido.personas || []).map((persona, indice) => (
-                    <div
-                        className="mesero-nuevo-persona"
-                        key={`${pedido.idPedido}-${indice}`}
-                    >
-                        {persona.nombrePersona &&
-                            persona.nombrePersona !== "Pedido general" && (
-                                <h4>{persona.nombrePersona}</h4>
-                            )}
-
-                        <ul>
-                            {(persona.productos || []).map(
-                                (producto, index) => (
-                                    <li
-                                        key={`${pedido.idPedido}-${indice}-${index}`}
-                                    >
-                                        <span className="mesero-nuevo-cantidad">
-                                            {producto.cantidad} ×
-                                        </span>
-
-                                        <span>
-                                            {producto.nombreProducto}
-                                        </span>
-                                    </li>
-                                )
-                            )}
-                        </ul>
+                        <span className="mesero-nuevo-fecha">
+                            {formatoFecha(pedido.fechaPedido)}
+                        </span>
                     </div>
-                ))}
-            </div>
 
-            <div className="mesero-nuevo-pie">
-                <div>
-                    <span>Total del pedido</span>
-                    <strong>{formatoPrecio(pedido.totalPedido)}</strong>
+                    <span
+                        className={`mesero-nuevo-estado estado-${(
+                            pedido.estadoPedido || "pendiente"
+                        ).toLowerCase()}`}
+                    >
+                        {nombreEstado(pedido.estadoPedido)}
+                    </span>
                 </div>
 
-                {vista === "historial" ? (
-                    <span className="mesero-nuevo-entregado">
-                        Entrega confirmada
-                    </span>
-                ) : (
-                    <button
-                        type="button"
-                        className="mesero-nuevo-btn-entregar"
-                        onClick={() => setMostrarModalEntrega(pedido)}
-                        disabled={entregando !== null}
-                    >
-                        {entregando === pedido.idPedido
-                            ? "Procesando..."
-                            : "Entregado"}
-                    </button>
-                )}
-            </div>
-        </article>
-    );
+                <div className="mesero-nuevo-productos">
+                    {(pedido.personas || []).map((persona, indice) => (
+                        <div
+                            className="mesero-nuevo-persona"
+                            key={`${pedido.idPedido}-${indice}`}
+                        >
+                            {persona.nombrePersona &&
+                                persona.nombrePersona !== "Pedido general" && (
+                                    <h4>{persona.nombrePersona}</h4>
+                                )}
+
+                            <ul>
+                                {(persona.productos || []).map(
+                                    (producto, index) => (
+                                        <li
+                                            key={`${pedido.idPedido}-${indice}-${index}`}
+                                        >
+                                            <span className="mesero-nuevo-cantidad">
+                                                {producto.cantidad} ×
+                                            </span>
+
+                                            <span>
+                                                {producto.nombreProducto}
+                                            </span>
+                                        </li>
+                                    )
+                                )}
+                            </ul>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="mesero-nuevo-pie">
+                    <div>
+                        <span>Total del pedido</span>
+                        <strong>{formatoPrecio(pedido.totalPedido)}</strong>
+                    </div>
+
+                    {esHistorial ? (
+                        <span className="mesero-nuevo-entregado">
+                            {estaPagado ? "Cuenta pagada y cerrada" : "Entrega confirmada"}
+                        </span>
+                    ) : (
+                        <button
+                            type="button"
+                            className="mesero-nuevo-btn-entregar"
+                            onClick={() => setMostrarModalEntrega(pedido)}
+                            disabled={entregando !== null}
+                        >
+                            {entregando === pedido.idPedido
+                                ? "Procesando..."
+                                : "Entregado"}
+                        </button>
+                    )}
+                </div>
+            </article>
+        );
+    };
 
     return (
         <main className="mesero-nuevo-dashboard">
@@ -345,7 +367,7 @@ function MeseroDashboard() {
                 <article className="mesero-nuevo-resumen-card">
                     <span className="mesero-nuevo-resumen-icono">04</span>
                     <div>
-                        <p>Entregados</p>
+                        <p>Entregados hoy</p>
                         <strong>{pedidosEntregados.length}</strong>
                     </div>
                 </article>
@@ -357,13 +379,13 @@ function MeseroDashboard() {
                         <h2>
                             {vista === "activos"
                                 ? "Pedidos activos"
-                                : "Historial de entregas"}
+                                : "Historial de entregas de hoy"}
                         </h2>
 
                         <p>
                             {vista === "activos"
                                 ? "Prioriza los pedidos que ya están listos."
-                                : "Consulta los pedidos cuya entrega fue confirmada."}
+                                : "Consulta los pedidos cerrados durante el día actual."}
                         </p>
                     </div>
 
@@ -399,7 +421,7 @@ function MeseroDashboard() {
                         }
                         onClick={() => setVista("historial")}
                     >
-                        Historial
+                        Historial de hoy
                         <span>{pedidosEntregados.length}</span>
                     </button>
                 </nav>
@@ -428,13 +450,13 @@ function MeseroDashboard() {
                         <h3>
                             {vista === "activos"
                                 ? "No hay pedidos activos"
-                                : "Aún no hay entregas registradas"}
+                                : "Aún no hay entregas registradas hoy"}
                         </h3>
 
                         <p>
                             {vista === "activos"
                                 ? "Puedes registrar un nuevo pedido con el botón superior."
-                                : "Los pedidos aparecerán aquí cuando confirmes su entrega."}
+                                : "Los pedidos entregados y pagados de hoy aparecerán aquí."}
                         </p>
 
                         {vista === "activos" && (
@@ -563,4 +585,3 @@ function MeseroDashboard() {
 }
 
 export default MeseroDashboard;
-
