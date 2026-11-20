@@ -1,1580 +1,3245 @@
 import { useEffect, useState } from "react";
+
 import { useParams, useNavigate } from "react-router-dom";
+
 import { obtenerProductos } from "../services/productoService";
+
 import { obtenerCategorias } from "../services/categoriaService";
 
 
+
+
+
 // Convierte las rutas de imagen del backend en direcciones accesibles desde React.
+
 const API_IMAGENES = (import.meta.env.VITE_API_URL || "http://localhost:8080").replace(/\/$/, "");
 
 function urlImagenProducto(imagenProducto) {
     if (!imagenProducto || typeof imagenProducto !== "string") return null;
     const ruta = imagenProducto.trim();
-    if (!ruta) return null;
+    if (!ruta || ruta.startsWith("//")) return null;
     if (/^https?:\/\//i.test(ruta)) return ruta;
-    if (ruta.startsWith("//")) return null;
     return `${API_IMAGENES}/${ruta.replace(/^\/+/, "")}`;
 }
 
+// Precio vigente enviado por el backend.
+function precioVigente(producto) {
+    const precio = Number(producto?.precioFinal ?? producto?.precioProducto ?? 0);
+    return Number.isFinite(precio) ? precio : 0;
+}
+
+function tieneDescuento(producto) {
+    return Boolean(producto?.tienePromocion) &&
+        Number(producto?.porcentajeDescuento) > 0 &&
+        precioVigente(producto) < Number(producto?.precioProducto);
+}
+
+function formatoPrecio(valor) {
+    return Number(valor || 0).toLocaleString("es-CO");
+}
+
+
 function ImagenProducto({ producto }) {
+
     const [falloImagen, setFalloImagen] = useState(false);
+
     const url = urlImagenProducto(producto.imagenProducto);
 
+
+
     if (!url || falloImagen) {
+
         return <span role="img" aria-label="Producto sin fotografía">🍽️</span>;
+
     }
 
+
+
     return (
+
         <img
+
             src={url}
+
             alt={producto.nombreProducto || "Fotografía del producto"}
+
             loading="lazy"
+
             onError={() => setFalloImagen(true)}
+
             style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+
         />
+
     );
+
 }
+
+
+
 
 
 function Mesa() {
 
+
+
+    const [suscripcionAbierta, setSuscripcionAbierta] = useState(false);
+    const [correoSuscripcion, setCorreoSuscripcion] = useState("");
+    const [aceptaPromociones, setAceptaPromociones] = useState(false);
+    const [enviandoSuscripcion, setEnviandoSuscripcion] = useState(false);
+    const [mensajeSuscripcion, setMensajeSuscripcion] = useState("");
+    const [suscripcionExitosa, setSuscripcionExitosa] = useState(false);
+
+    async function suscribirCliente(e) {
+        e.preventDefault();
+        if (!aceptaPromociones || !correoSuscripcion.trim() || enviandoSuscripcion) return;
+        setEnviandoSuscripcion(true);
+        setMensajeSuscripcion("");
+        try {
+            const respuesta = await fetch("/api/suscripciones", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+    correo: correoSuscripcion.trim(),
+    aceptaPromociones: aceptaPromociones
+})
+            });
+            if (!respuesta.ok) {
+                const datos = await respuesta.json().catch(() => null);
+                throw new Error(datos?.mensaje || datos?.message || "No se pudo registrar tu correo. Inténtalo de nuevo.");
+            }
+            setSuscripcionExitosa(true);
+            setMensajeSuscripcion("Revisa tu correo para confirmar la suscripción.");
+        } catch (error) {
+            setMensajeSuscripcion(error.message || "Ocurrió un error al registrar el correo.");
+        } finally {
+            setEnviandoSuscripcion(false);
+        }
+    }
+
     const [historialPedidos, setHistorialPedidos] = useState([]);
+
     const [mensajePedido, setMensajePedido] = useState("");
+
     const [productosNoDisponibles, setProductosNoDisponibles] = useState([]);
+
     const [enviandoPedido, setEnviandoPedido] = useState(false);
+
+
 
     const navigate = useNavigate();
 
+
+
     const { codigo } = useParams();
+
+
 
     const [mesa, setMesa] = useState(null);
 
+
+
     const [productos, setProductos] = useState([]);
+
+
 
     const [categorias, setCategorias] = useState([]);
 
+
+
     const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null);
 
+
+
     const [personas, setPersonas] = useState([
+
     {
+
         id: 1,
+
         nombre: "Persona 1",
+
         productos: []
+
     }
+
 ]);
+
+
 
     const [carritoAbierto, setCarritoAbierto] = useState(false);
 
+
+
     const [personaSeleccionada, setPersonaSeleccionada] = useState(1);
 
+
+
     const [mostrarAgregarPersona, setMostrarAgregarPersona] =
+
     useState(false);
 
+
+
     const [personaAEliminar, setPersonaAEliminar] =
+
     useState(null);
+
+
 
     const [confirmacionAbierta, setConfirmacionAbierta] = useState(false);
 
+
+
     const [cargando, setCargando] = useState(true);
+
+
 
     const [error, setError] = useState(false);
 
+
+
     const [productoAEliminar, setProductoAEliminar] = useState(null);
+
+
 
     const [nombreNuevaPersona, setNombreNuevaPersona] = useState("");
 
+
+
     const productosFiltrados = categoriaSeleccionada === null
+
     ? productos
+
     : productos.filter(
+
         (producto) =>
+
             producto.categoria.idCategoria === categoriaSeleccionada
+
     );
 
+
+
     const personaActual = personas.find(
+
     (persona) => persona.id === personaSeleccionada
+
 );
+
+
+
 
 
 async function obtenerHistorialPedidos() {
 
+
+
     try {
 
+
+
         const respuesta = await fetch(
+
             `/api/pedidos/mesa/${mesa.id_mesa}`
+
         );
 
+
+
         if (!respuesta.ok) {
+
             throw new Error("No se pudo obtener el historial");
+
         }
+
+
 
         const pedidos = await respuesta.json();
 
+
+
         setHistorialPedidos(pedidos);
 
+
+
         console.log("=================================");
+
         console.log("HISTORIAL DE PEDIDOS");
+
         console.log(pedidos);
+
         console.log("=================================");
+
+
 
     } catch (error) {
 
+
+
         console.error(
+
             "Error obteniendo historial:",
+
             error
+
         );
+
+
 
     }
 
+
+
 }
+
+
+
 
 
 function confirmarEliminacionPersona() {
 
+
+
     if (!personaAEliminar) {
+
         return;
+
     }
+
+
 
     const idPersonaEliminar = personaAEliminar.id;
 
+
+
     setPersonas((personasActuales) => {
 
+
+
         const personasRestantes = personasActuales.filter(
+
             (persona) => persona.id !== idPersonaEliminar
+
         );
+
+
 
         return personasRestantes;
 
+
+
     });
 
+
+
     // Si estábamos viendo la persona eliminada,
+
     // seleccionamos otra persona.
+
     if (personaSeleccionada === idPersonaEliminar) {
 
+
+
         const otraPersona = personas.find(
+
             (persona) => persona.id !== idPersonaEliminar
+
         );
 
+
+
         if (otraPersona) {
+
             setPersonaSeleccionada(otraPersona.id);
+
         }
 
+
+
     }
+
+
 
     setPersonaAEliminar(null);
 
+
+
 }
 
-function solicitarEliminarPersona(persona) {
+
+
+function solicitarEliminarPersonaDesdeLista(persona) {
+
+
 
     setPersonaAEliminar(persona);
 
+
+
 }
+
+
 
     function agregarAlCarrito(producto) {
 
+
+
     setPersonas((personasActuales) => {
+
+
 
         return personasActuales.map((persona) => {
 
+
+
             if (persona.id !== personaSeleccionada) {
+
                 return persona;
+
             }
 
+
+
             const productoExistente = persona.productos.find(
+
                 (item) => item.idProducto === producto.idProducto
+
             );
+
+
 
             if (productoExistente) {
 
+
+
                 return {
+
                     ...persona,
+
                     productos: persona.productos.map((item) =>
+
                         item.idProducto === producto.idProducto
+
                             ? {
+
                                 ...item,
+
                                 cantidad: item.cantidad + 1
+
                             }
+
                             : item
+
                     )
+
                 };
+
+
 
             }
 
+
+
             return {
+
                 ...persona,
+
                 productos: [
+
                     ...persona.productos,
+
                     {
+
                         ...producto,
+
                         cantidad: 1
+
                     }
+
                 ]
+
             };
+
+
 
         });
 
+
+
     });
 
+
+
 }
+
+
 
 function cambiarCantidad(idProducto, cambio) {
 
+
+
     const persona = personas.find(
+
         (persona) => persona.id === personaSeleccionada
+
     );
+
+
 
     if (!persona) {
+
         return;
+
     }
+
+
 
     const producto = persona.productos.find(
+
         (item) => item.idProducto === idProducto
+
     );
 
+
+
     if (!producto) {
+
         return;
+
     }
 
+
+
     // Si intenta bajar de 1 a 0
+
     if (producto.cantidad === 1 && cambio === -1) {
+
+
 
         setProductoAEliminar(producto);
 
+
+
         return;
+
     }
 
+
+
     setPersonas((personasActuales) =>
+
         personasActuales.map((persona) => {
 
+
+
             if (persona.id !== personaSeleccionada) {
+
                 return persona;
+
             }
 
+
+
             return {
+
                 ...persona,
 
+
+
                 productos: persona.productos.map((item) =>
+
                     item.idProducto === idProducto
+
                         ? {
+
                             ...item,
+
                             cantidad: item.cantidad + cambio
+
                         }
+
                         : item
+
                 )
+
             };
 
+
+
         })
+
     );
+
 }
+
+
 
 function confirmarEliminacion() {
 
+
+
     if (!productoAEliminar) {
+
         return;
+
     }
 
+
+
     // Guardamos el ID antes de modificar el estado
+
     const idProductoEliminar = productoAEliminar.idProducto;
 
+
+
     setPersonas((personasActuales) =>
+
         personasActuales.map((persona) => {
 
+
+
             if (persona.id !== personaSeleccionada) {
+
                 return persona;
+
             }
 
+
+
             return {
+
                 ...persona,
 
+
+
                 productos: persona.productos.filter(
+
                     (producto) =>
+
                         producto.idProducto !== idProductoEliminar
+
                 )
+
             };
 
+
+
         })
+
     );
 
+
+
     // Cerramos el modal
+
     setProductoAEliminar(null);
+
 }
+
+
 
 function cancelarEliminacion() {
 
+
+
     setProductoAEliminar(null);
 
+
+
 }
+
+
 
 function agregarPersona(nombre) {
 
+
+
     const nuevaPersona = {
+
         id: Date.now(),
+
         nombre: nombre,
+
         productos: []
+
     };
 
+
+
     setPersonas((personasActuales) => [
+
         ...personasActuales,
+
         nuevaPersona
+
     ]);
 
+
+
     setPersonaSeleccionada(nuevaPersona.id);
+
 }
+
+
 
 function solicitarEliminarPersona() {
 
+
+
     if (!personaActual) {
+
         return;
+
     }
+
+
 
     // No permitimos eliminar la última persona
+
     if (personas.length === 1) {
+
         return;
+
     }
 
+
+
     setPersonaAEliminar(personaActual);
+
 }
+
+
+
 
 
 async function actualizarCatalogo() {
+
     const [productosActualizados, categoriasActualizadas] = await Promise.all([
+
         obtenerProductos(),
+
         obtenerCategorias()
+
     ]);
+
     setProductos(productosActualizados);
+
     setCategorias(categoriasActualizadas);
+
     setCategoriaSeleccionada((actual) =>
+
         actual !== null && !categoriasActualizadas.some(
+
             (categoria) => categoria.idCategoria === actual
+
         ) ? null : actual
+
     );
+
     return productosActualizados;
+
 }
+
+
 
 function revisarCarrito(productosDisponibles) {
+
     const disponiblesPorId = new Map(
+
         productosDisponibles.map((producto) => [producto.idProducto, producto])
+
     );
+
     const noDisponibles = [];
+
     const preciosCambiados = [];
+
     for (const persona of personas) {
+
         for (const item of persona.productos) {
+
             const actualizado = disponiblesPorId.get(item.idProducto);
+
             if (!actualizado) {
+
                 if (!noDisponibles.some((p) => p.idProducto === item.idProducto)) {
+
                     noDisponibles.push({
+
                         idProducto: item.idProducto,
+
                         nombreProducto: item.nombreProducto
+
                     });
+
                 }
-            } else if (actualizado.precioProducto !== item.precioProducto) {
+
+            } else if (actualizado.precioProducto !== item.precioProducto ||
+                precioVigente(actualizado) !== precioVigente(item) ||
+                actualizado.porcentajeDescuento !== item.porcentajeDescuento) {
+
                 if (!preciosCambiados.some((p) => p.idProducto === item.idProducto)) {
+
                     preciosCambiados.push(actualizado);
+
                 }
+
             }
+
         }
+
     }
+
     setProductosNoDisponibles(noDisponibles);
+
     if (preciosCambiados.length > 0) {
+
         setPersonas((actuales) => actuales.map((persona) => ({
+
             ...persona,
+
             productos: persona.productos.map((item) => {
+
                 const actualizado = disponiblesPorId.get(item.idProducto);
+
                 return actualizado ? { ...item, ...actualizado, cantidad: item.cantidad } : item;
+
             })
+
         })));
+
     }
+
     return { noDisponibles, preciosCambiados };
+
 }
+
+
 
 function quitarProductosNoDisponibles() {
+
     const ids = new Set(productosNoDisponibles.map((p) => p.idProducto));
+
     setPersonas((actuales) => actuales.map((persona) => ({
+
         ...persona,
+
         productos: persona.productos.filter((item) => !ids.has(item.idProducto))
+
     })));
+
     setProductosNoDisponibles([]);
+
     setMensajePedido("");
+
     setConfirmacionAbierta(false);
+
     setCarritoAbierto(true);
+
 }
 
+
+
 async function enviarPedido() {
+
     if (enviandoPedido) return;
+
     setEnviandoPedido(true);
+
     setMensajePedido("");
+
     try {
+
         // Comprobar el catálogo antes de enviar, sin borrar el carrito.
+
         const catalogoActual = await actualizarCatalogo();
+
         const { noDisponibles, preciosCambiados } = revisarCarrito(catalogoActual);
+
         if (noDisponibles.length > 0) {
+
             setMensajePedido("Algunos productos ya no están disponibles. Retíralos para continuar.");
+
             return;
+
         }
+
         if (preciosCambiados.length > 0) {
+
             setMensajePedido("Algunos precios cambiaron. Revisa el total actualizado y confirma nuevamente.");
+
             return;
+
         }
+
+
 
         const pedidoRequest = {
 
+
+
             idMesa: mesa.id_mesa,
 
+
+
             personas: personas
+
                 .filter(
+
                     (persona) => persona.productos.length > 0
+
                 )
+
                 .map((persona) => ({
+
+
 
                     nombre: persona.nombre,
 
+
+
                     productos: persona.productos.map((producto) => ({
+
+
 
                         idProducto: producto.idProducto,
 
+
+
                         cantidad: producto.cantidad
+
+
 
                     }))
 
+
+
                 }))
+
+
 
         };
 
 
+
+
+
         console.log("=================================");
+
         console.log("ENVIANDO PEDIDO");
+
         console.log(pedidoRequest);
+
         console.log("=================================");
+
+
+
 
 
         const respuesta = await fetch(
+
             "/api/pedidos",
+
             {
+
                 method: "POST",
 
+
+
                 headers: {
+
                     "Content-Type": "application/json"
+
                 },
 
+
+
                 body: JSON.stringify(pedidoRequest)
+
             }
+
         );
 
 
+
+
+
         if (!respuesta.ok) {
+
             if (respuesta.status === 409) {
+
                 // La disponibilidad pudo cambiar entre la comprobación y el POST.
+
                 const catalogoActual = await actualizarCatalogo();
+
                 revisarCarrito(catalogoActual);
+
                 setMensajePedido("El pedido no se pudo confirmar porque cambió la disponibilidad. Revisa los productos del carrito.");
+
                 return;
+
             }
+
             throw new Error("No se pudo guardar el pedido. Inténtalo nuevamente.");
+
         }
 
 
+
+
+
         // ==========================================
+
         // RECIBIR RESPUESTA DE SPRING BOOT
+
         // ==========================================
+
+
 
         const pedidoGuardado = await respuesta.json();
 
 
+
+
+
         console.log("=================================");
+
         console.log("PEDIDO GUARDADO CORRECTAMENTE");
+
         console.log(pedidoGuardado);
+
         console.log("ID PEDIDO:", pedidoGuardado.idPedido);
+
         console.log("TOTAL:", pedidoGuardado.totalPedido);
+
         console.log("ESTADO:", pedidoGuardado.estadoPedido);
+
         console.log("=================================");
 
 
+
+
+
         // ==========================================
+
         // CERRAR CONFIRMACIÓN
+
         // ==========================================
+
+
 
         setConfirmacionAbierta(false);
 
 
-        // ==========================================
-        // IR A PÁGINA PEDIDO ENVIADO
+
+
+
         // ==========================================
 
+        // IR A PÁGINA PEDIDO ENVIADO
+
+        // ==========================================
+
+
+
         navigate(`/pedido-enviado/${codigo}`, {
+
     state: {
+
         idPedido: pedidoGuardado.idPedido,
+
         total: pedidoGuardado.totalPedido,
+
         estado: pedidoGuardado.estadoPedido
+
     }
+
 });
+
+
+
 
 
     } catch (error) {
 
+
+
         console.error("ERROR AL ENVIAR EL PEDIDO:", error);
+
         setMensajePedido(error.message || "Ocurrió un error al enviar el pedido.");
+
     } finally {
+
         setEnviandoPedido(false);
+
     }
+
 }
+
+
 
     useEffect(() => {
 
+
+
         fetch(`/api/mesas/codigo/${codigo}`)
+
             .then(response => {
 
+
+
                 if (!response.ok) {
+
                     throw new Error("Mesa no encontrada");
+
                 }
+
+
 
                 return response.json();
 
+
+
             })
+
             .then(data => {
 
+
+
                 setMesa(data);
+
                 setCargando(false);
+
+
 
             })
+
             .catch(error => {
 
+
+
                 console.error(error);
+
                 setError(true);
+
                 setCargando(false);
+
+
 
             });
 
+
+
     }, [codigo]);
 
-    
+
+
+
+
 useEffect(() => {
 
+
+
     if (!mesa) {
+
         return;
+
     }
+
+
 
     let activo = true;
 
+
+
     const actualizarHistorial = async () => {
+
         try {
+
             const respuesta = await fetch(
+
                 `/api/pedidos/mesa/${mesa.id_mesa}`,
+
                 { cache: "no-store" }
+
             );
 
+
+
             if (!respuesta.ok) {
+
                 throw new Error("Error al consultar pedidos");
+
             }
+
+
 
             const pedidos = await respuesta.json();
 
+
+
             if (activo) {
+
                 setHistorialPedidos(pedidos);
+
             }
 
+
+
         } catch (error) {
+
             console.error(
+
                 "Error actualizando historial:",
+
                 error
+
             );
+
         }
+
     };
+
+
 
     actualizarHistorial();
 
+
+
     const intervalo = setInterval(
+
         actualizarHistorial,
+
         5000
+
     );
 
+
+
     return () => {
+
         activo = false;
+
         clearInterval(intervalo);
+
     };
+
+
 
 }, [mesa?.id_mesa]);
 
 
+
+
+
     useEffect(() => {
+
         let activo = true;
+
         const cargarMenu = async () => {
+
             try {
+
                 const [productosData, categoriasData] = await Promise.all([
+
                     obtenerProductos(), obtenerCategorias()
+
                 ]);
+
                 if (!activo) return;
+
                 setProductos(productosData);
+
                 setCategorias(categoriasData);
+
             } catch (error) {
+
                 console.error("Error cargando el menú:", error);
+
             }
+
         };
+
         cargarMenu();
+
         const actualizarAlVolver = () => {
+
             if (document.visibilityState === "visible") cargarMenu();
+
         };
+
         document.addEventListener("visibilitychange", actualizarAlVolver);
+
         return () => {
+
             activo = false;
+
             document.removeEventListener("visibilitychange", actualizarAlVolver);
+
         };
+
     }, []);
 
+
+
     if (cargando) {
+
         return (
+
             <div className="loading-screen">
+
                 <div className="loading-circle"></div>
+
                 <p>Preparando tu mesa...</p>
+
             </div>
+
         );
+
     }
 
 
+
+
+
         if (error || !mesa) {
+
     return (
+
         <main className="error-page">
+
+
 
             <div className="error-container">
 
+
+
                 <div className="error-logo">
+
                     Mesa<span>Click</span>
+
                 </div>
+
+
 
                 <div className="error-card">
 
+
+
                     <div className="error-icon">
+
                         !
+
                     </div>
 
+
+
                     <span className="error-number">
+
                         404
+
                     </span>
 
+
+
                     <h1>
+
                         Mesa no encontrada
+
                     </h1>
 
+
+
                     <p>
+
                         Lo sentimos, no pudimos encontrar
+
                         la mesa que estás buscando.
+
                     </p>
 
+
+
                     <button
+
                         className="error-button"
+
                         onClick={() => navigate("/")}
+
                     >
+
                         Volver al inicio
+
                     </button>
+
+
 
                 </div>
 
+
+
             </div>
+
+
+
+
 
 
 
         </main>
+
     );
+
 }
+
+
 
         console.log("CÓDIGO DE LA MESA:", mesa?.codigoQrMesa);
 
+
+
         return (
+
             <main className="cliente">
+
+
 
             {/* ENCABEZADO */}
 
+
+
 <header className="cliente-header">
 
+
+
     <div>
+
         <span className="logo">
+
             Mesa<span>Click</span>
+
         </span>
 
+
+
         <p className="restaurant-text">
+
             Tu experiencia, más fácil.
+
         </p>
+
     </div>
+
+
 
     <div className="header-actions">
 
+
+
         <div className="mesa-badge">
+
             Mesa {mesa.numero_mesa}
+
         </div>
 
+
+
         <button
+
     className="boton-iniciar-sesion"
-    onClick={() => navigate(`/iniciar-sesion?codigo=${mesa.codigoQrMesa}`)}
+
+    onClick={() => { setSuscripcionAbierta(true); setMensajeSuscripcion(""); }}
+
 >
-    Iniciar sesión
+
+    Recibir promociones
+
 </button>
 
+
+
     </div>
+
+
 
 </header>
 
 
+
+
+
+            {suscripcionAbierta && (
+                <div className="mc-suscripcion-overlay" onClick={() => setSuscripcionAbierta(false)}>
+                    <section className="mc-suscripcion-modal" role="dialog" aria-modal="true" aria-labelledby="mc-suscripcion-titulo" onClick={(e) => e.stopPropagation()}>
+                        <button type="button" className="mc-suscripcion-cerrar" aria-label="Cerrar" onClick={() => setSuscripcionAbierta(false)}>×</button>
+                        <span className="mc-suscripcion-etiqueta">MESACLICK</span>
+                        <h2 id="mc-suscripcion-titulo">Promociones y eventos</h2>
+                        <p>Recibe novedades y descuentos por correo. No necesitas crear una cuenta para pedir.</p>
+                        {suscripcionExitosa ? (
+                            <div className="mc-suscripcion-exito" role="status">
+                                {mensajeSuscripcion}
+                                <button type="button" onClick={() => setSuscripcionAbierta(false)}>Entendido</button>
+                            </div>
+                        ) : (
+                            <form onSubmit={suscribirCliente}>
+                                <label htmlFor="mc-correo-suscripcion">Correo electrónico</label>
+                                <input id="mc-correo-suscripcion" type="email" required maxLength={254} autoComplete="email" placeholder="tucorreo@ejemplo.com" value={correoSuscripcion} onChange={(e) => setCorreoSuscripcion(e.target.value)} />
+                                <label className="mc-suscripcion-consentimiento">
+                                    <input type="checkbox" checked={aceptaPromociones} onChange={(e) => setAceptaPromociones(e.target.checked)} />
+                                    <span>Autorizo recibir promociones y eventos por correo electrónico. Podré cancelar mi suscripción en cualquier momento.</span>
+                                </label>
+                                {mensajeSuscripcion && <p className="mc-suscripcion-error" role="alert">{mensajeSuscripcion}</p>}
+                                <button type="submit" className="mc-suscripcion-enviar" disabled={!aceptaPromociones || enviandoSuscripcion}>
+                                    {enviandoSuscripcion ? "Registrando..." : "Suscribirme"}
+                                </button>
+                            </form>
+                        )}
+                    </section>
+                </div>
+            )}
+
             {/* BIENVENIDA */}
+
+
 
             <section className="welcome">
 
+
+
                 <span className="welcome-small">
+
                     ¡Hola! 👋
+
                 </span>
 
+
+
                 <h1>
+
                     ¿Qué te gustaría<br />
+
                     pedir hoy?
+
                 </h1>
 
+
+
                 <p>
+
                     Explora nuestro menú y disfruta tu comida.
+
                 </p>
+
+
 
             </section>
 
 
+
+
+
             {/* CATEGORÍAS */}
+
+
 
             <section className="categories">
 
+
+
     <button
+
     className={`category ${
+
         categoriaSeleccionada === null ? "active" : ""
+
     }`}
+
     onClick={() => setCategoriaSeleccionada(null)}
+
 >
+
     Todo
+
 </button>
+
+
 
     {categorias.map((categoria) => (
 
+
+
     <button
+
         key={categoria.idCategoria}
+
         className={`category ${
+
             categoriaSeleccionada === categoria.idCategoria
+
                 ? "active"
+
                 : ""
+
         }`}
+
         onClick={() => setCategoriaSeleccionada(categoria.idCategoria)}
+
     >
+
         {categoria.nombreCategoria}
+
     </button>
+
+
 
 ))}
 
+
+
 </section>
+
+
+
 
 
             {/* PRODUCTOS */}
 
+
+
             <section className="products">
+
+
 
     <div className="section-title">
 
+
+
         <h2>
+
             Nuestro menú
+
         </h2>
 
+
+
     </div>
+
+
 
     <div className="product-grid">
 
+
+
         {productosFiltrados.map((producto) => (
 
+
+
             <article
+
                 className="product-card"
+
                 key={producto.idProducto}
+
             >
 
+
+
                 <div className="product-image">
+
                     <ImagenProducto
+
                         key={producto.imagenProducto || "sin-imagen"}
+
                         producto={producto}
+
                     />
+
                 </div>
+
+
 
                 <div className="product-info">
 
+
+
                     <h3>
+
                         {producto.nombreProducto}
+
                     </h3>
 
+
+
                     <p>
+
                         {producto.descripcionProducto}
+
                     </p>
+
+
 
                     <div className="product-bottom">
 
-                        <strong>
-                            ${producto.precioProducto.toLocaleString("es-CO")}
-                        </strong>
+
+
+                        <div className="precio-producto-promocion">
+                            {tieneDescuento(producto) && (
+                                <>
+                                    <span style={{ color: "#16803c", fontWeight: 700, display: "block" }}>
+                                        {producto.porcentajeDescuento}% de descuento
+                                    </span>
+                                    <span style={{ textDecoration: "line-through", color: "#888", display: "block", fontSize: "0.85rem" }}>
+                                        ${formatoPrecio(producto.precioProducto)}
+                                    </span>
+                                </>
+                            )}
+                            <strong style={tieneDescuento(producto) ? { color: "#16803c" } : undefined}>
+                                ${formatoPrecio(precioVigente(producto))}
+                            </strong>
+                        </div>
+
+
 
                         <button
+
     className="add-button"
+
     onClick={() => agregarAlCarrito(producto)}
+
 >
+
     +
+
 </button>
+
+
 
                     </div>
 
+
+
                 </div>
+
+
 
             </article>
 
+
+
         ))}
 
+
+
     </div>
+
+
 
 </section>
 
 
+
+
+
             {/* CARRITO */}
 
+
+
 <button
+
     className="cart-button"
+
     onClick={() => setCarritoAbierto(true)}
+
 >
+
     <span className="cart-icon">
+
         🛒
+
     </span>
+
+
 
     <span>
+
         Ver pedido
+
     </span>
 
+
+
     <span className="cart-count">
+
         {personas.reduce(
+
             (total, persona) =>
+
                 total +
+
                 persona.productos.reduce(
+
                     (subtotal, producto) =>
+
                         subtotal + producto.cantidad,
+
                     0
+
                 ),
+
             0
+
         )}
+
     </span>
+
 </button>
+
+
+
 
 
 {carritoAbierto && (
 
+
+
     <div className="cart-overlay">
+
+
 
         <div className="cart-modal">
 
+
+
             {/* ENCABEZADO */}
+
+
 
             <div className="cart-header">
 
+
+
                 <button
+
                     className="cart-close"
+
                     onClick={() => setCarritoAbierto(false)}
+
                 >
+
                     ✕
+
                 </button>
 
+
+
                 <h2>
+
                     Tu pedido
+
                 </h2>
+
+
 
                 <div className="cart-header-space"></div>
 
+
+
             </div>
+
+
+
 
 
             {/* PERSONA ACTUAL */}
 
+
+
             {personaActual && (
+
+
 
                 <div className="person-selector">
 
+
+
                     <button
+
                         className="person-arrow"
+
                         onClick={() => {
 
+
+
                             const indiceActual =
+
                                 personas.findIndex(
+
                                     (persona) =>
+
                                         persona.id === personaSeleccionada
+
                                 );
 
+
+
                             const anterior =
+
                                 indiceActual === 0
+
                                     ? personas.length - 1
+
                                     : indiceActual - 1;
 
+
+
                             setPersonaSeleccionada(
+
                                 personas[anterior].id
+
                             );
 
+
+
                         }}
+
                     >
+
                         ←
+
                     </button>
+
+
+
 
 
                     <div className="person-name">
 
+
+
                         <span>
+
                             Pedido de
+
                         </span>
 
+
+
                         <strong>
+
                             {personaActual.nombre}
+
                         </strong>
+
+
 
                     </div>
 
 
+
+
+
                     <button
+
                         className="person-arrow"
+
                         onClick={() => {
 
+
+
                             const indiceActual =
+
                                 personas.findIndex(
+
                                     (persona) =>
+
                                         persona.id === personaSeleccionada
+
                                 );
 
+
+
                             const siguiente =
+
                                 indiceActual === personas.length - 1
+
                                     ? 0
+
                                     : indiceActual + 1;
 
+
+
                             setPersonaSeleccionada(
+
                                 personas[siguiente].id
+
                             );
 
+
+
                         }}
+
                     >
+
                         →
+
                     </button>
+
+
 
                 </div>
 
+
+
             )}
+
+
+
 
 
             {/* PRODUCTOS DE LA PERSONA */}
 
+
+
             <div className="cart-items">
 
+
+
                 {!personaActual ||
+
                 personaActual.productos.length === 0 ? (
 
+
+
                     <p className="empty-cart">
+
                         {personaActual
+
                             ? `${personaActual.nombre} todavía no tiene productos.`
+
                             : "No hay personas."
+
                         }
+
                     </p>
+
+
 
                 ) : (
 
+
+
                     personaActual.productos.map((item) => (
 
+
+
                         <div
+
                             className="cart-item"
+
                             key={item.idProducto}
+
                         >
+
+
 
                             <div className="cart-item-info">
 
+
+
                                 <h3>
+
                                     {item.nombreProducto}
+
                                 </h3>
 
+
+
                                 <p>
-                                    ${item.precioProducto.toLocaleString("es-CO")}
+
+                                    ${formatoPrecio(precioVigente(item))}
+                                    {tieneDescuento(item) && (
+                                        <span style={{ marginLeft: 8, textDecoration: "line-through", color: "#888" }}>
+                                            ${formatoPrecio(item.precioProducto)}
+                                        </span>
+                                    )}
+
                                 </p>
 
+
+
                             </div>
+
+
+
 
 
                             <div className="quantity">
 
+
+
                                 <button
+
                                     onClick={() =>
+
                                         cambiarCantidad(
+
                                             item.idProducto,
+
                                             -1
+
                                         )
+
                                     }
+
                                 >
+
                                     −
+
                                 </button>
+
+
+
 
 
                                 <span>
+
                                     {item.cantidad}
+
                                 </span>
 
 
+
+
+
                                 <button
+
                                     onClick={() =>
+
                                         cambiarCantidad(
+
                                             item.idProducto,
+
                                             1
+
                                         )
+
                                     }
+
                                 >
+
                                     +
+
                                 </button>
+
+
 
                             </div>
 
+
+
                         </div>
+
+
 
                     ))
 
+
+
                 )}
 
+
+
             </div>
+
+
+
 
 
             {/* SUBTOTAL DE LA PERSONA */}
 
+
+
             <div className="person-subtotal">
 
+
+
                 <span>
+
                     Subtotal
+
                 </span>
 
+
+
                 <strong>
+
                     $
+
                     {personaActual?.productos
+
                         .reduce(
+
                             (total, item) =>
+
                                 total +
-                                item.precioProducto * item.cantidad,
+
+                                precioVigente(item) * item.cantidad,
+
                             0
+
                         )
+
                         .toLocaleString("es-CO")
+
                     }
+
                 </strong>
 
+
+
             </div>
+
+
+
 
 
             {/* AGREGAR PERSONA */}
 
+
+
             <button
+
                 className="add-person-button"
+
                 onClick={() => setMostrarAgregarPersona(true)}
+
             >
+
                 ＋ Agregar persona
+
             </button>
+
+
+
 
 
             {/* ELIMINAR PERSONA */}
 
+
+
             {personas.length > 1 && (
 
+
+
                 <button
+
                     className="delete-person-button"
+
                     onClick={solicitarEliminarPersona}
+
                 >
+
                     🗑 Eliminar {personaActual?.nombre}
+
                 </button>
+
+
 
             )}
 
 
+
+
+
             {/* TOTAL GENERAL */}
+
+
 
             <div className="cart-footer">
 
+
+
                 <div className="cart-total">
 
+
+
                     <span>
+
                         Total
+
                     </span>
 
+
+
                     <strong>
+
                         $
+
                         {personas
+
                             .reduce(
+
                                 (totalPersonas, persona) =>
+
                                     totalPersonas +
+
                                     persona.productos.reduce(
+
                                         (totalProductos, item) =>
+
                                             totalProductos +
-                                            item.precioProducto *
+
+                                            precioVigente(item) *
+
                                             item.cantidad,
+
                                         0
+
                                     ),
+
                                 0
+
                             )
+
                             .toLocaleString("es-CO")
+
                         }
+
                     </strong>
 
+
+
                 </div>
+
+
+
 
 
                 <button
+
     className="confirm-order"
+
     disabled={
+
         !personas.some(
+
             (persona) => persona.productos.length > 0
+
         )
+
     }
+
     onClick={() => setConfirmacionAbierta(true)}
+
 >
+
     Confirmar pedido
+
 </button>
 
+
+
             </div>
+
+
 
         </div>
 
+
+
     </div>
+
+
 
 )}
 
+
+
 {confirmacionAbierta && (
+
     <div className="confirm-overlay">
+
+
 
         <div className="confirm-modal">
 
+
+
             {/* ENCABEZADO */}
+
+
 
             <div className="confirm-header">
 
+
+
                 <div className="confirm-icon">
+
                     ✓
+
                 </div>
 
+
+
                 <h2>
+
                     Confirmar pedido
+
                 </h2>
 
+
+
                 <p>
+
                     Revisa tu pedido antes de enviarlo.
+
                 </p>
 
+
+
             </div>
+
+
+
 
 
             {/* PEDIDOS DE LAS PERSONAS */}
 
+
+
             <div className="confirm-persons">
 
+
+
                 {personas
+
                     .filter(
+
                         (persona) =>
+
                             persona.productos.length > 0
+
                     )
+
                     .map((persona) => {
 
+
+
                         const subtotalPersona =
+
                             persona.productos.reduce(
+
                                 (total, item) =>
+
                                     total +
-                                    item.precioProducto *
+
+                                    precioVigente(item) *
+
                                     item.cantidad,
+
                                 0
+
                             );
+
+
 
                         return (
 
+
+
                             <div
+
                                 className="confirm-person"
+
                                 key={persona.id}
+
                             >
+
+
 
                                 {/* NOMBRE DE LA PERSONA */}
 
+
+
                                 <div className="confirm-person-header">
+
+
 
                                     <div className="confirm-person-name">
 
+
+
                                         <span>
+
                                             Pedido de
+
                                         </span>
 
+
+
                                         <strong>
+
                                             {persona.nombre}
+
                                         </strong>
+
+
 
                                     </div>
 
+
+
                                 </div>
+
+
+
 
 
                                 {/* PRODUCTOS */}
 
+
+
                                 <div className="confirm-products">
+
+
 
                                     {persona.productos.map((item) => (
 
+
+
                                         <div
+
                                             className="confirm-product"
+
                                             key={item.idProducto}
+
                                         >
 
+
+
                                             <span>
+
                                                 {item.cantidad} ×{" "}
+
                                                 {item.nombreProducto}
+
                                             </span>
 
+
+
                                             <strong>
+
                                                 $
+
                                                 {(
-                                                    item.precioProducto *
+
+                                                    precioVigente(item) *
+
                                                     item.cantidad
+
                                                 ).toLocaleString(
+
                                                     "es-CO"
+
                                                 )}
+
                                             </strong>
+
+
 
                                         </div>
 
+
+
                                     ))}
 
+
+
                                 </div>
+
+
+
 
 
                                 {/* SUBTOTAL PERSONA */}
 
+
+
                                 <div className="confirm-subtotal">
 
+
+
                                     <span>
+
                                         Subtotal
+
                                     </span>
 
+
+
                                     <strong>
+
                                         $
+
                                         {subtotalPersona.toLocaleString(
+
                                             "es-CO"
+
                                         )}
+
                                     </strong>
+
+
 
                                 </div>
 
+
+
                             </div>
+
+
 
                         );
 
+
+
                     })}
 
+
+
             </div>
+
+
+
 
 
             {/* TOTAL GENERAL */}
 
+
+
             <div className="confirm-total">
+
+
 
                 <div>
 
+
+
                     <span>
+
                         Total del pedido
+
                     </span>
 
+
+
                     <small>
+
                         Incluye todos los pedidos
+
                     </small>
+
+
 
                 </div>
 
+
+
                 <strong>
+
                     $
+
                     {personas
+
                         .reduce(
+
                             (totalPersonas, persona) =>
+
                                 totalPersonas +
+
                                 persona.productos.reduce(
+
                                     (totalProductos, item) =>
+
                                         totalProductos +
-                                        item.precioProducto *
+
+                                        precioVigente(item) *
+
                                         item.cantidad,
+
                                     0
+
                                 ),
+
                             0
+
                         )
+
                         .toLocaleString("es-CO")}
+
                 </strong>
 
+
+
             </div>
+
+
+
 
 
             {/* BOTONES FINALES */}
 
+
+
             <div className="confirm-actions">
 
+
+
                 <button
+
                     className="confirm-back"
+
                     onClick={() =>
+
                         setConfirmacionAbierta(false)
+
                     }
+
                 >
+
                     ← Volver a editar
+
                 </button>
 
 
+
+
+
                 <button
+
     className="confirm-final"
+
     onClick={enviarPedido}
+
     disabled={enviandoPedido}
+
 >
+
     {enviandoPedido ? "Comprobando disponibilidad..." : "Confirmar pedido ✓"}
+
 </button>
+
+
 
             </div>
 
+
+
         </div>
 
+
+
     </div>
+
 )}
+
+
 
 {mostrarAgregarPersona && (
 
+
+
     <div className="delete-overlay">
+
+
 
         <div className="delete-modal">
 
+
+
             <div className="delete-icon">
+
                 👤
+
             </div>
 
+
+
             <h2>
+
                 Agregar persona
+
             </h2>
 
+
+
             <p>
+
                 ¿Cómo se llama esta persona?
+
             </p>
 
+
+
             <input
+
     type="text"
+
     className="person-name-input"
+
     placeholder="Ej. María"
+
     value={nombreNuevaPersona}
+
     onChange={(e) => setNombreNuevaPersona(e.target.value)}
+
 />
+
+
 
             <div className="delete-actions">
 
-                <button
-                    className="cancel-delete"
-                    onClick={() =>
-                        setMostrarAgregarPersona(false)
-                    }
-                >
-                    Cancelar
-                </button>
+
 
                 <button
+
+                    className="cancel-delete"
+
+                    onClick={() =>
+
+                        setMostrarAgregarPersona(false)
+
+                    }
+
+                >
+
+                    Cancelar
+
+                </button>
+
+
+
+                <button
+
     className="confirm-delete"
+
     onClick={() => {
+
+
 
         const nombre = nombreNuevaPersona.trim();
 
+
+
         if (!nombre) {
+
             return;
+
         }
+
+
 
         agregarPersona(nombre);
 
+
+
         setNombreNuevaPersona("");
+
+
 
         setMostrarAgregarPersona(false);
 
+
+
     }}
+
 >
+
     Agregar
+
 </button>
+
+
 
             </div>
 
+
+
         </div>
+
+
 
     </div>
 
+
+
 )}
+
+
 
 {productoAEliminar && (
 
+
+
     <div className="delete-overlay">
+
+
 
         <div className="delete-modal">
 
+
+
             <div className="delete-icon">
+
                 !
+
             </div>
 
+
+
             <h2>
+
                 ¿Eliminar producto?
+
             </h2>
 
+
+
             <p>
+
                 ¿Estás seguro de que quieres eliminar
+
                 <strong>
+
                     {" "}{productoAEliminar.nombreProducto}
+
                 </strong>
+
                 {" "}de tu pedido?
+
             </p>
+
+
 
             <div className="delete-actions">
 
-                <button
-                    className="cancel-delete"
-                    onClick={cancelarEliminacion}
-                >
-                    Cancelar
-                </button>
+
 
                 <button
-                    className="confirm-delete"
-                    onClick={confirmarEliminacion}
+
+                    className="cancel-delete"
+
+                    onClick={cancelarEliminacion}
+
                 >
-                    Sí, eliminar
+
+                    Cancelar
+
                 </button>
+
+
+
+                <button
+
+                    className="confirm-delete"
+
+                    onClick={confirmarEliminacion}
+
+                >
+
+                    Sí, eliminar
+
+                </button>
+
+
 
             </div>
 
+
+
         </div>
+
+
 
     </div>
 
+
+
 )}
+
+
 
 {personaAEliminar && (
+
     <div className="delete-overlay">
+
+
 
         <div className="delete-modal">
 
+
+
             <div className="delete-icon">
+
                 !
+
             </div>
 
+
+
             <h2>
+
                 ¿Eliminar persona?
+
             </h2>
 
-            <p>
-                ¿Seguro que quieres eliminar a{" "}
-                <strong>
-                    {personaAEliminar.nombre}
-                </strong>
-                ?
-            </p>
+
 
             <p>
-                También se eliminarán todos los productos
-                asociados a esta persona.
+
+                ¿Seguro que quieres eliminar a{" "}
+
+                <strong>
+
+                    {personaAEliminar.nombre}
+
+                </strong>
+
+                ?
+
             </p>
+
+
+
+            <p>
+
+                También se eliminarán todos los productos
+
+                asociados a esta persona.
+
+            </p>
+
+
 
             <div className="delete-actions">
 
-                <button
-                    className="cancel-delete"
-                    onClick={() => setPersonaAEliminar(null)}
-                >
-                    Cancelar
-                </button>
+
 
                 <button
-                    className="confirm-delete"
-                    onClick={confirmarEliminacionPersona}
+
+                    className="cancel-delete"
+
+                    onClick={() => setPersonaAEliminar(null)}
+
                 >
-                    Sí, eliminar
+
+                    Cancelar
+
                 </button>
+
+
+
+                <button
+
+                    className="confirm-delete"
+
+                    onClick={confirmarEliminacionPersona}
+
+                >
+
+                    Sí, eliminar
+
+                </button>
+
+
 
             </div>
 
+
+
         </div>
 
+
+
     </div>
+
 )}
+
+
 
 {/* AVISO PROFESIONAL DE MESACLICK */}
+
 {mensajePedido && (
+
     <div className="mesaclick-alert-overlay">
+
         <div
+
             className="mesaclick-alert-modal"
+
             role="alertdialog"
+
             aria-modal="true"
+
             aria-labelledby="mc-alert-title"
+
             aria-describedby="mc-alert-description"
+
         >
+
             <div className="mesaclick-alert-header">
+
                 <div className="mesaclick-alert-icon" aria-hidden="true">!</div>
+
                 <h2 className="mesaclick-alert-title" id="mc-alert-title">
+
                     {productosNoDisponibles.length > 0
+
                         ? "Productos no disponibles"
+
                         : mensajePedido.toLowerCase().includes("precio")
+
                             ? "Precios actualizados"
+
                             : "No fue posible confirmar el pedido"}
+
                 </h2>
+
             </div>
+
             <div className="mesaclick-alert-body">
+
                 <p className="mesaclick-alert-description" id="mc-alert-description">
+
                     {mensajePedido}
+
                 </p>
+
                 {productosNoDisponibles.length > 0 && (
+
                     <div className="mesaclick-alert-products">
+
                         <div className="mesaclick-alert-products-title">
+
                             Productos no disponibles
+
                         </div>
+
                         {productosNoDisponibles.map((producto) => (
+
                             <div className="mesaclick-alert-product" key={producto.idProducto}>
+
                                 <span className="mesaclick-alert-product-icon" aria-hidden="true">⚠</span>
+
                                 <span>{producto.nombreProducto}</span>
+
                             </div>
+
                         ))}
+
                     </div>
+
                 )}
+
                 <div className="mesaclick-alert-info">
+
                     <span className="mesaclick-alert-info-icon" aria-hidden="true">ⓘ</span>
+
                     <span>
+
                         {productosNoDisponibles.length > 0
+
                             ? "Para continuar, retira los productos no disponibles y revisa tu pedido antes de confirmarlo."
+
                             : mensajePedido.toLowerCase().includes("precio")
+
                                 ? "Los importes se han actualizado según el menú vigente. Revisa el total antes de continuar."
+
                                 : "Puedes revisar el pedido e intentarlo nuevamente. No se eliminarán los productos de tu carrito."}
+
                     </span>
+
                 </div>
+
                 <div className="mesaclick-alert-actions">
+
                     <button
+
                         type="button"
+
                         className="mesaclick-alert-cancel"
+
                         onClick={() => setMensajePedido("")}
+
                     >
+
                         Cerrar
+
                     </button>
+
                     {productosNoDisponibles.length > 0 ? (
+
                         <button
+
                             type="button"
+
                             className="mesaclick-alert-confirm"
+
                             onClick={quitarProductosNoDisponibles}
+
                         >
+
                             Quitar productos y editar pedido
+
                         </button>
+
                     ) : (
+
                         <button
+
                             type="button"
+
                             className="mesaclick-alert-confirm"
+
                             onClick={() => {
+
                                 setMensajePedido("");
+
                                 setConfirmacionAbierta(false);
+
                                 setCarritoAbierto(true);
+
                             }}
+
                         >
+
                             Revisar pedido
+
                         </button>
+
                     )}
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
 )}
+
+
+
 
 
         </main>
+
     );
+
 }
+
+
 
 export default Mesa;

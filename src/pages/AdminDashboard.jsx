@@ -1,3 +1,4 @@
+import AdminSidebar from "../components/admin/AdminSidebar";
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -87,66 +88,7 @@ useEffect(() => {
         <div className="admin-dashboard">
 
             {/* BARRA LATERAL */}
-            <aside className="admin-sidebar">
-
-                <div className="admin-sidebar-logo">
-                    Mesa<span>Click</span>
-                </div>
-
-                <div className="admin-sidebar-divider"></div>
-
-                <nav className="admin-navigation">
-
-                    <button className="admin-nav-item active">
-                        <span>▦</span>
-                        Dashboard
-                    </button>
-
-                    <button
-                        className="admin-nav-item"
-                        onClick={() => navigate("/admin/personal")}
-                    >
-                        <span>♙</span>
-                        Personal
-                    </button>
-
-                    <button
-                        className="admin-nav-item"
-                        onClick={() => navigate("/admin/productos")}
-                    >
-                        <span>▣</span>
-                        Productos
-                    </button>
-
-                    <button className="admin-nav-item disabled">
-                        <span>▤</span>
-                        Pedidos
-                        <small>Próximamente</small>
-                    </button>
-
-                    <button className="admin-nav-item disabled">
-                        <span>▥</span>
-                        Reportes
-                        <small>Próximamente</small>
-                    </button>
-
-                    <button className="admin-nav-item disabled">
-                        <span>⚙</span>
-                        Configuración
-                        <small>Próximamente</small>
-                    </button>
-
-                </nav>
-
-                <button
-                    className="admin-logout"
-                    onClick={cerrarSesion}
-                >
-                    <span>↪</span>
-                    Cerrar sesión
-                </button>
-
-            </aside>
+            <AdminSidebar />
 
             {/* CONTENIDO PRINCIPAL */}
             <main className="admin-main">

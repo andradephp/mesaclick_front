@@ -9355,3 +9355,188 @@ button {
     }
 }
 
+
+
+/* ===== MesaClick: Promociones y eventos ===== */
+/* MesaClick · Promociones y eventos. Estilos aislados para no afectar otros paneles. */
+.mc-promos { --mc-orange:#f18a04; --mc-border:#e9edf2; --mc-text:#172033; --mc-muted:#667085; color:var(--mc-text); padding-bottom:42px; }
+.mc-promos *, .mc-promos *::before, .mc-promos *::after {box-sizing:border-box}
+.mc-promos .mc-promos-header {display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:22px}
+.mc-promos .mc-promos-header h1 {margin:5px 0 0;font-size:clamp(1.5rem,2.4vw,2rem);letter-spacing:-.035em}
+.mc-promos .mc-promos-eyebrow {font-size:.75rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--mc-orange);margin:0}
+.mc-promos button {font:inherit;cursor:pointer;transition:background .15s,border-color .15s,transform .15s,box-shadow .15s}
+.mc-promos button:disabled {opacity:.5;cursor:not-allowed;transform:none}
+.mc-promos button:focus-visible,.mc-promos input:focus-visible,.mc-promos textarea:focus-visible,.mc-promos select:focus-visible {outline:3px solid #f9c77f;outline-offset:2px}
+.mc-promos .mc-promos-btn {display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid transparent;border-radius:10px;padding:11px 17px;font-size:.88rem;font-weight:750;white-space:nowrap}
+.mc-promos .mc-promos-btn-primary {background:var(--mc-orange);color:#fff;box-shadow:0 3px 9px #f18a0429}
+.mc-promos .mc-promos-btn-primary:not(:disabled):hover {background:#d87800;transform:translateY(-1px)}
+.mc-promos .mc-promos-btn-outline {background:#fff;border-color:#dce2e9;color:#344054}
+.mc-promos .mc-promos-btn-outline:not(:disabled):hover {background:#fff7ed;border-color:#f6c37f;color:#ad5d00}
+.mc-promos .mc-promos-btn-danger {background:#fff3f2;border-color:#fecaca;color:#b42318}
+.mc-promos .mc-promos-btn-danger:not(:disabled):hover {background:#ffe4e1}
+.mc-promos .mc-promos-tabs {display:flex;gap:8px;border-bottom:1px solid var(--mc-border);margin-bottom:24px}
+.mc-promos .mc-promos-tab {background:transparent;border:0;border-bottom:3px solid transparent;color:#667085;font-weight:750;padding:12px 18px;margin-bottom:-1px}
+.mc-promos .mc-promos-tab:hover {color:#a65a00;background:#fff8ee}
+.mc-promos .mc-promos-tab.is-active {color:#b96500;border-bottom-color:var(--mc-orange)}
+.mc-promos .mc-promos-alert {padding:12px 16px;border-radius:10px;margin-bottom:16px;font-size:.9rem}
+.mc-promos .mc-promos-alert-error {background:#fff1f0;color:#a5261c;border:1px solid #fecaca}
+.mc-promos .mc-promos-alert-ok {background:#edfff4;color:#137345;border:1px solid #b9edce}
+.mc-promos .mc-promos-stats {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:24px}
+.mc-promos .mc-promos-stat {display:flex;align-items:center;gap:16px;background:#fff;border:1px solid var(--mc-border);border-radius:16px;padding:22px;box-shadow:0 4px 18px #19202e08}
+.mc-promos .mc-promos-stat-icon {display:grid;place-items:center;width:52px;height:52px;border-radius:14px;background:#fff0db;color:#b96100;font-size:1.4rem;font-weight:800;flex-shrink:0}
+.mc-promos .mc-promos-stat-icon.green {background:#eaf8f0;color:#16814a}
+.mc-promos .mc-promos-stat span {display:block;color:var(--mc-muted);font-size:.85rem;font-weight:600}
+.mc-promos .mc-promos-stat strong {display:block;font-size:1.8rem;line-height:1.3;margin-top:3px}
+.mc-promos .mc-promos-panel {background:#fff;border:1px solid var(--mc-border);border-radius:17px;box-shadow:0 5px 22px #17203308;overflow:hidden}
+.mc-promos .mc-promos-panel-header {display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding:22px 24px;border-bottom:1px solid var(--mc-border)}
+.mc-promos .mc-promos-panel-header h2 {margin:0;font-size:1.1rem}
+.mc-promos .mc-promos-panel-header p {margin:6px 0 0;color:var(--mc-muted);font-size:.85rem}
+.mc-promos .mc-promos-table-wrap {overflow-x:auto;width:100%}
+.mc-promos .mc-promos-table {width:100%;border-collapse:collapse;text-align:left;min-width:850px}
+.mc-promos .mc-promos-table th {background:#f8fafc;color:#667085;font-size:.73rem;text-transform:uppercase;letter-spacing:.055em;padding:15px 18px;white-space:nowrap}
+.mc-promos .mc-promos-table td {padding:17px 18px;border-top:1px solid #edf0f4;vertical-align:middle;font-size:.86rem}
+.mc-promos .mc-promos-table tbody tr:hover {background:#fffaf3}
+.mc-promos .mc-promos-name {display:block;font-weight:800;color:#1d2939}
+.mc-promos .mc-promos-description,.mc-promos .mc-promos-secondary {display:block;color:var(--mc-muted);font-size:.78rem;margin-top:5px;line-height:1.5}
+.mc-promos .mc-promos-discount {display:inline-flex;background:#fff0db;color:#b85f00;border-radius:8px;padding:7px 10px;font-weight:800}
+.mc-promos .mc-promos-status {display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:7px 11px;font-size:.77rem;font-weight:800;background:#f2f4f7;color:#475467;white-space:nowrap}
+.mc-promos .mc-promos-status::before {content:"";height:7px;width:7px;border-radius:50%;background:currentColor}
+.mc-promos .mc-promos-status.active {background:#e9f9f0;color:#16814a}
+.mc-promos .mc-promos-status.scheduled {background:#eaf2ff;color:#2358ad}
+.mc-promos .mc-promos-status.expired {background:#fff2e8;color:#a65a00}
+.mc-promos .mc-promos-empty {padding:36px 22px;text-align:center;color:var(--mc-muted)}
+.mc-promos .mc-promos-overlay {position:fixed;inset:0;background:#101828a6;z-index:1000;display:grid;place-items:center;padding:18px}
+.mc-promos .mc-promos-modal {background:#fff;border-radius:18px;width:min(100%,600px);max-height:90vh;overflow:auto;box-shadow:0 20px 60px #0003}
+.mc-promos .mc-promos-modal-header {padding:23px 26px;border-bottom:1px solid var(--mc-border);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.mc-promos .mc-promos-modal-header h2 {margin:0;font-size:1.3rem}
+.mc-promos .mc-promos-close {border:0;background:#f2f4f7;color:#344054;border-radius:8px;font-size:1.4rem;width:35px;height:35px}
+.mc-promos .mc-promos-form {display:grid;gap:17px;padding:24px 26px}
+.mc-promos .mc-promos-form label {display:grid;gap:7px;color:#344054;font-weight:700;font-size:.86rem}
+.mc-promos .mc-promos-form input,.mc-promos .mc-promos-form textarea,.mc-promos .mc-promos-form select {width:100%;min-width:0;padding:11px 13px;border:1px solid #d0d5dd;border-radius:9px;background:#fff;color:#172033;font:inherit;font-weight:400}
+.mc-promos .mc-promos-form input:focus,.mc-promos .mc-promos-form textarea:focus,.mc-promos .mc-promos-form select:focus {border-color:var(--mc-orange)}
+.mc-promos .mc-promos-form-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.mc-promos .mc-promos-form-actions {display:flex;justify-content:flex-end;gap:10px;border-top:1px solid var(--mc-border);padding-top:18px}
+@media(max-width:720px){.mc-promos .mc-promos-stats{grid-template-columns:1fr}.mc-promos .mc-promos-panel-header{padding:18px}.mc-promos .mc-promos-header{align-items:stretch}.mc-promos .mc-promos-form-grid{grid-template-columns:1fr}.mc-promos .mc-promos-form,.mc-promos .mc-promos-modal-header{padding:18px}.mc-promos .mc-promos-btn{padding:10px 13px}}
+
+
+/* ==========================================
+   MESACLICK - TABLA DE PROMOCIONES
+   ESTILO ADMINISTRATIVO PROFESIONAL
+   ========================================== */
+
+.mc-promos table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    font-size: 13px;
+}
+
+.mc-promos table thead {
+    background: #f8fafc;
+}
+
+.mc-promos table th {
+    padding: 15px 18px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.mc-promos table td {
+    padding: 18px;
+    vertical-align: middle;
+    color: #334155;
+    border-bottom: 1px solid #edf0f3;
+}
+
+.mc-promos table tbody tr:hover {
+    background: #fafbfc;
+}
+
+.mc-promos table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Indicador de estado */
+.mc-promos table td .mc-promos-status,
+.mc-promos table td [class*="status"] {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: #ecfdf3;
+    color: #166534;
+    border: 1px solid #d1fadf;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Botones de acciones */
+.mc-promos table td button {
+    background: #ffffff;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    border-radius: 5px;
+    padding: 8px 13px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: none;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.mc-promos table td button:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.mc-promos table td button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* Igualar tamaño de Vigente y Desactivar */
+
+.mc-promos table td .mc-promos-status,
+.mc-promos table td [class*="status"],
+.mc-promos table td button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+
+    min-width: 95px;
+    height: 34px;
+    padding: 0 12px;
+
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+
+/* MesaClick: suscripción voluntaria desde el menú QR */
+.mc-suscripcion-overlay{position:fixed;inset:0;z-index:3000;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;padding:18px}
+.mc-suscripcion-modal{position:relative;width:min(100%,440px);max-height:90vh;overflow:auto;background:#fff;border-radius:14px;padding:30px;box-shadow:0 20px 70px rgba(0,0,0,.2);color:#1e293b}
+.mc-suscripcion-cerrar{position:absolute;right:15px;top:12px;border:0;background:transparent;font-size:27px;color:#64748b;cursor:pointer}
+.mc-suscripcion-etiqueta{font-size:11px;font-weight:700;letter-spacing:.12em;color:#d97706}
+.mc-suscripcion-modal h2{font-size:24px;margin:8px 0 10px;color:#0f172a}
+.mc-suscripcion-modal p{color:#64748b;font-size:14px;line-height:1.6;margin:0 0 22px}
+.mc-suscripcion-modal form{display:flex;flex-direction:column;gap:12px}
+.mc-suscripcion-modal form>label:first-child{font-size:13px;font-weight:600}
+.mc-suscripcion-modal input[type=email]{width:100%;box-sizing:border-box;border:1px solid #cbd5e1;border-radius:7px;padding:12px;font-size:14px;background:white;color:#0f172a}
+.mc-suscripcion-consentimiento{display:flex;align-items:flex-start;gap:10px;font-size:12px;line-height:1.5;color:#475569;cursor:pointer;margin:6px 0}
+.mc-suscripcion-consentimiento input{margin-top:3px;accent-color:#f18a04;flex-shrink:0}
+.mc-suscripcion-enviar,.mc-suscripcion-exito button{background:#f18a04;color:white;border:0;border-radius:7px;padding:12px 16px;font-weight:600;cursor:pointer}
+.mc-suscripcion-enviar:disabled{opacity:.55;cursor:not-allowed}
+.mc-suscripcion-modal .mc-suscripcion-error{margin:0;color:#b91c1c;font-size:12px}
+.mc-suscripcion-exito{display:flex;flex-direction:column;gap:16px;color:#166534;font-size:14px}
